@@ -5,176 +5,182 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deniz Dalbasi | Portfolio</title>
     <style>
-        /* 1. Theme Variables */
-        :root {
-            --ubc-blue: #002145;
-            --ubc-gold: #ffb703;
-            --bg-color: #f4f7f9;
-            --text-color: #333;
-            --section-bg: #ffffff;
-            --accent-color: var(--ubc-blue);
-            --card-shadow: rgba(0,0,0,0.05);
-        }
+    /* 1. Theme Variables */
+    :root {
+        --ubc-blue: #002145;
+        --ubc-gold: #ffb703;
+        --bg-color: #f4f7f9;
+        --text-color: #333;
+        --section-bg: #ffffff;
+        /* This variable switches between Blue and Gold */
+        --accent-color: var(--ubc-blue); 
+        --card-shadow: rgba(0,0,0,0.05);
+    }
 
-        body.dark-theme {
-            --bg-color: #0b141d;
-            --text-color: #e0e0e0;
-            --section-bg: #16222e;
-            --accent-color: var(--ubc-gold);
-            --card-shadow: rgba(0,0,0,0.4);
-        }
+    /* 2. Dark Mode Overrides */
+    body.dark-theme {
+        --bg-color: #0b141d;
+        --text-color: #e0e0e0;
+        --section-bg: #16222e;
+        /* Swapping to Gold for Dark Mode */
+        --accent-color: var(--ubc-gold); 
+        --card-shadow: rgba(0,0,0,0.4);
+    }
 
-        body { 
-            font-family: 'Segoe UI', system-ui, sans-serif; 
-            line-height: 1.6; 
-            color: var(--text-color); 
-            max-width: 1000px; 
-            margin: 0 auto; 
-            padding: 0; 
-            background-color: var(--bg-color); 
-            transition: 0.3s ease;
-        }
+    body { 
+        font-family: 'Segoe UI', system-ui, sans-serif; 
+        line-height: 1.6; 
+        color: var(--text-color); 
+        max-width: 1000px; 
+        margin: 0 auto; 
+        padding: 0; 
+        background-color: var(--bg-color); 
+        transition: background 0.3s ease, color 0.3s ease;
+    }
 
-        /* Hero Section */
-        header { 
-            background: var(--ubc-blue);
-            color: white; 
-            padding: 60px 20px; 
-            text-align: center; 
-            border-bottom: 5px solid var(--ubc-gold);
-        }
+    /* Hero Section - Stays Blue for Branding */
+    header { 
+        background: var(--ubc-blue);
+        color: white; 
+        padding: 60px 20px; 
+        text-align: center; 
+        border-bottom: 5px solid var(--ubc-gold);
+    }
 
-        .profile-img {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            border: 5px solid white;
-            object-fit: cover;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
+    .profile-img {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        border: 5px solid white;
+        object-fit: cover;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
 
-        header h1 { margin: 10px 0; font-size: 2.8rem; }
-        header p { font-size: 1.2rem; opacity: 0.9; margin: 5px 0; }
-        
-        .contact-links { margin: 20px 0; }
-        .contact-links a { 
-            display: inline-block;
-            color: var(--ubc-gold); 
-            text-decoration: none; 
-            margin: 10px 15px; 
-            padding: 12px 25px;
-            font-weight: 600;
-            border: 2px solid var(--ubc-gold);
-            border-radius: 8px;
-            transition: 0.3s;
-        }
-        .contact-links a:hover { background: var(--ubc-gold); color: var(--ubc-blue); }
+    header h1 { margin: 10px 0; font-size: 2.8rem; color: white; }
+    header p { font-size: 1.2rem; opacity: 0.9; margin: 5px 0; color: white; }
+    
+    .contact-links { margin: 20px 0; }
+    .contact-links a { 
+        display: inline-block;
+        color: var(--ubc-gold); 
+        text-decoration: none; 
+        margin: 10px 15px; 
+        padding: 12px 25px;
+        font-weight: 600;
+        border: 2px solid var(--ubc-gold);
+        border-radius: 8px;
+        transition: 0.3s;
+    }
+    .contact-links a:hover { background: var(--ubc-gold); color: var(--ubc-blue); }
 
-        #theme-toggle {
-            background: none;
-            border: 1px solid var(--ubc-gold);
-            color: var(--ubc-gold);
-            padding: 8px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
+    #theme-toggle {
+        background: none;
+        border: 1px solid var(--ubc-gold);
+        color: var(--ubc-gold);
+        padding: 8px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+        margin-top: 15px;
+    }
 
-        /* Content Layout */
-        .container { padding: 40px 20px; }
+    /* Content Layout */
+    .container { padding: 40px 20px; }
 
-        section { 
-            background: var(--section-bg); 
-            padding: 30px; 
-            border-radius: 15px; 
-            box-shadow: 0 5px 20px var(--card-shadow); 
-            margin-bottom: 30px; 
-            transition: transform 0.3s ease;
-        }
-        section:hover { transform: translateY(-5px); }
+    section { 
+        background: var(--section-bg); 
+        padding: 30px; 
+        border-radius: 15px; 
+        box-shadow: 0 5px 20px var(--card-shadow); 
+        margin-bottom: 30px; 
+        transition: transform 0.3s ease, background 0.3s ease;
+    }
+    section:hover { transform: translateY(-5px); }
 
-        h2 { 
-            color: var(--accent-color); 
-            border-left: 5px solid var(--ubc-gold);
-            padding-left: 15px;
-            margin-top: 0;
-            font-size: 1.5rem;
-            transition: color 0.3s;
-        }
+    /* Fix: All section titles (Featured Projects, Education, etc.) turn Gold */
+    h2 { 
+        color: var(--accent-color); 
+        border-left: 5px solid var(--ubc-gold);
+        padding-left: 15px;
+        margin-top: 0;
+        font-size: 1.5rem;
+        transition: color 0.3s;
+    }
 
-        /* Skills Grid */
-        .skills-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-            gap: 20px; 
-        }
-        .skill-category h4 { margin-bottom: 10px; color: #777; }
-        
-        .tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
-        
-        .tags li {
-            background: #eef2f7;
-            color: #333;
-            padding: 6px 12px; 
-            border-radius: 6px; 
-            font-size: 0.85rem; 
-            font-weight: 600;
-            border: 1px solid #d1d9e6;
-            position: relative;
-            cursor: help;
-            transition: 0.3s;
-        }
+    /* Skills Grid */
+    .skills-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+        gap: 20px; 
+    }
+    .skill-category h4 { margin-bottom: 10px; color: #777; }
+    
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
+    
+    .tags li {
+        background: #eef2f7;
+        color: #333;
+        padding: 6px 12px; 
+        border-radius: 6px; 
+        font-size: 0.85rem; 
+        font-weight: 600;
+        border: 1px solid #d1d9e6;
+        position: relative;
+        cursor: help;
+        transition: 0.3s;
+    }
 
-        body.dark-theme .tags li {
-            background: #2c3e50;
-            color: var(--ubc-gold);
-            border-color: var(--ubc-gold);
-        }
+    /* Labels like 'Python' turn Gold in Dark Mode */
+    body.dark-theme .tags li {
+        background: #2c3e50;
+        color: var(--ubc-gold);
+        border-color: var(--ubc-gold);
+    }
 
-        /* Tooltip Logic */
-        .tags li::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: #fff;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.2s;
-            z-index: 100;
-        }
-        .tags li:hover::after { opacity: 1; visibility: visible; }
+    /* Tooltip Logic */
+    .tags li::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.2s;
+        z-index: 100;
+    }
+    .tags li:hover::after { opacity: 1; visibility: visible; }
 
-        /* Project Cards */
-        .project-card {
-            border-left: 3px solid #eee;
-            padding-left: 20px;
-            margin-bottom: 30px;
-        }
-        .project-card h3 a { 
-            color: var(--accent-color);
-            text-decoration: underline;
-            text-underline-offset: 4px;
-            transition: 0.3s;
-        }
-        .project-card h3 a:hover { color: var(--ubc-gold); }
-        .project-tech { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+    /* Project Titles turn Gold in Dark Mode */
+    .project-card {
+        border-left: 3px solid #eee;
+        padding-left: 20px;
+        margin-bottom: 30px;
+    }
+    .project-card h3 a { 
+        color: var(--accent-color);
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        transition: color 0.3s;
+    }
+    .project-card h3 a:hover { color: var(--ubc-gold); }
+    .project-tech { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        footer { text-align: center; padding: 40px; color: #999; font-size: 0.9rem; }
+    footer { text-align: center; padding: 40px; color: #999; font-size: 0.9rem; }
 
-        @media (max-width: 600px) {
-            header h1 { font-size: 2rem; }
-            .profile-img { width: 140px; height: 140px; }
-        }
-    </style>
+    @media (max-width: 600px) {
+        header h1 { font-size: 2rem; }
+        .profile-img { width: 140px; height: 140px; }
+    }
+</style>
 </head>
 <body>
 
