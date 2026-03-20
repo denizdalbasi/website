@@ -6,67 +6,131 @@
     <style>
         :root {
             --bg-color: #0b141d;
+            --panel-dark: #070d14;
             --accent: #ffb703; /* UBC Gold */
             --bar-color: #002145; /* UBC Blue */
-            --compare-color: #ff3c3c; /* Red for active comparison */
-            --sorted-color: #4caf50; /* Green for finished */
+            --compare-color: #ff3c3c;
+            --sorted-color: #4caf50;
+            --text-gray: #888;
+            --border: #333;
         }
 
-        body { font-family: 'Courier New', monospace; background: var(--bg-color); color: #e0e0e0; padding: 20px; }
+        body { 
+            font-family: 'Courier New', monospace; 
+            background: var(--bg-color); 
+            color: #e0e0e0; 
+            padding: 20px; 
+            margin: 0;
+        }
         
+        /* Layout Grid */
+        .main-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 300px; /* Bars on left, Rules on right */
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
         #control-panel {
+            grid-column: 1 / span 2;
             border: 1px solid var(--accent);
             padding: 15px; margin-bottom: 20px;
             display: flex; gap: 15px; align-items: center;
             background: rgba(255, 183, 3, 0.05);
         }
 
+        /* Visualization Area */
         .bar-container {
             display: flex;
             align-items: flex-end;
-            height: 300px;
+            height: 400px;
             gap: 2px;
+            border: 1px solid var(--border);
             border-bottom: 2px solid var(--accent);
-            padding-bottom: 5px;
+            padding: 10px;
+            background: #000;
         }
 
         .bar {
             background-color: var(--bar-color);
             border: 1px solid rgba(255,255,255,0.1);
             flex: 1;
-            transition: height 0.1s ease;
         }
 
-        button, select {
+        /* Documentation Sidebar */
+        .sidebar {
+            background: var(--panel-dark);
+            border: 1px solid var(--border);
+            padding: 20px;
+            font-size: 0.85rem;
+        }
+
+        .sidebar h3 { 
+            color: var(--accent); 
+            margin-top: 0; 
+            font-size: 1rem; 
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .sidebar ul { padding-left: 15px; color: var(--text-gray); }
+        .sidebar li { margin-bottom: 12px; line-height: 1.4; }
+        .highlight { color: var(--accent); }
+
+        button, select, input {
             background: none; border: 1px solid var(--accent);
             color: var(--accent); padding: 8px; cursor: pointer;
         }
 
-        .stats { margin-top: 15px; font-size: 0.8rem; color: #888; }
+        button:hover { background: var(--accent); color: black; }
+
+        .stats { 
+            grid-column: 1 / span 2;
+            margin-top: 15px; 
+            font-size: 0.8rem; 
+            color: #888; 
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <<div id="control-panel">
-    <button onclick="generateArray()">[ NEW DATA ]</button>
-    <select id="algo-select">
-        <option value="bubble">Bubble Sort</option>
-        <option value="insertion">Insertion Sort</option>
-        <option value="quick">Quick Sort</option>
-        <option value="merge">Merge Sort</option>
-    </select>
-    <button id="start-btn" onclick="startSort()">> EXECUTE</button>
-    <button id="stop-btn" onclick="stopSort()" style="color: #ff3c3c; border-color: #ff3c3c;">X STOP</button>
-    <span>Speed:</span>
-    <input type="range" id="speed" min="1" max="100" value="50">
-</div>
+    <div class="main-wrapper">
+        <div id="control-panel">
+            <button onclick="generateArray()">[ NEW DATA ]</button>
+            <select id="algo-select">
+                <option value="bubble">Bubble Sort</option>
+                <option value="insertion">Insertion Sort</option>
+                <option value="quick">Quick Sort</option>
+                <option value="merge">Merge Sort</option>
+            </select>
+            <button id="start-btn" onclick="startSort()">> EXECUTE</button>
+            <button id="stop-btn" onclick="stopSort()" style="color: #ff3c3c; border-color: #ff3c3c;">X STOP</button>
+            <span>Speed:</span>
+            <input type="range" id="speed" min="1" max="100" value="50">
+        </div>
 
-    <div class="bar-container" id="container"></div>
+        <div class="bar-container" id="container"></div>
 
-    <div class="stats">
-        [SYS] ALGO: <span id="current-algo">NONE</span> | 
-        COMPARISONS: <span id="comp-count">0</span> | 
-        SWAPS: <span id="swap-count">0</span>
+        <div class="sidebar">
+            <h3>System Documentation</h3>
+            <ul>
+                <li><strong>Data Initialization:</strong> Use <span class="highlight">[ NEW DATA ]</span> to generate a randomized integer array within the workspace.</li>
+                <li><strong>Algorithm Selection:</strong> Choose a sorting heuristic. Each algorithm possesses unique <span class="highlight">Time Complexity</span> ($O$) and memory overhead.</li>
+                <li><strong>Execution:</strong> Click <span class="highlight">EXECUTE</span> to begin the visualization. Red bars indicate active pointer comparisons.</li>
+                <li><strong>Simulation Speed:</strong> Adjust the slider to modify the delay between atomic operations (comparisons and swaps).</li>
+            </ul>
+        </div>
+
+        <div class="stats">
+            [SYS] STATE: <span id="state-ui" class="highlight">IDLE</span> | 
+            ALGO: <span id="current-algo">NONE</span> | 
+            COMPARISONS: <span id="comp-count">0</span> | 
+            SWAPS: <span id="swap-count">0</span>
+        </div>
     </div>
 
     <script src="sort.js"></script>
