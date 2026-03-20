@@ -1,155 +1,258 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Mini-Breakout Game</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinematic Collision Engine | Deniz Dalbasi</title>
     <style>
-        canvas { background: #eee; display: block; margin: 0 auto; border: 2px solid #333; }
+        /* 1. Engineering Dark Theme (Matching your Screenshot) */
+        :root {
+            --bg-dark: #0b141d;
+            --gold: #ffb703;
+            --text-gray: #888;
+            --canvas-bg: #000;
+        }
+
+        body { 
+            background-color: var(--bg-dark); 
+            color: white; 
+            font-family: 'Courier New', Courier, monospace; 
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .game-container {
+            width: 500px;
+            border: 1px solid var(--gold);
+            padding: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* 2. Header & Toolbar */
+        .header-banner h2 { 
+            margin: 0 0 10px 0; 
+            font-size: 1.2rem; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .toolbar { 
+            display: flex; 
+            gap: 15px; 
+            align-items: center; 
+            padding: 10px 0;
+            border-top: 1px solid var(--gold);
+            border-bottom: 1px solid var(--gold);
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+        }
+
+        .control-group label { color: var(--gold); margin-right: 5px; }
+
+        select, button {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 4px 8px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        button:hover { background: var(--gold); color: black; }
+
+        /* 3. Game Canvas */
+        canvas { 
+            background: var(--canvas-bg);
+            border: 1px solid var(--gold);
+            display: block;
+            margin: 0 auto;
+            image-rendering: pixelated; /* Keeps it looking sharp */
+        }
+
+        /* 4. Real-time Status Bar */
+        .status-bar { 
+            margin-top: 15px; 
+            font-size: 0.75rem; 
+            color: var(--text-gray); 
+            display: flex;
+            gap: 10px;
+        }
+
+        .highlight { color: var(--gold); }
     </style>
 </head>
 <body>
-    <canvas id="myCanvas" width="480" height="320"></canvas>
 
-<script>// --- Replace your current <script> content with this ---
+<div class="game-container">
+    <div class="header-banner">
+        <h2>Kinematic Collision Engine</h2>
+        <div class="toolbar">
+            <div class="control-group">
+                <label>Difficulty:</label>
+                <select id="speedSelect" onchange="resetGame()">
+                    <option value="2">25x25 (Standard)</option>
+                    <option value="4">50x50 (Fast)</option>
+                    <option value="6">Engineer Mode</option>
+                </select>
+            </div>
+            <button onclick="resetGame()">Reset Grid</button>
+        </div>
+    </div>
 
-const canvas = document.getElementById("myCanvas");
-const ctx = canvas.getContext("2d");
+    <canvas id="myCanvas" width="460" height="300"></canvas>
 
-// Ball settings
-let x, y, dx, dy;
-const ballRadius = 10;
+    <div class="status-bar">
+        <span>[SYS] State: <span id="gameState" class="highlight">IDLE</span></span>
+        <span>| Score: <span id="scoreVal" class="highlight">0</span></span>
+        <span>| Ball: (<span id="ballPos" class="highlight">0,0</span>)</span>
+    </div>
+</div>
 
-// Paddle settings
-const paddleHeight = 10;
-const paddleWidth = 75;
-let paddleX;
-let rightPressed = false;
-let leftPressed = false;
+<script>
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
 
-// Brick settings
-const brickRowCount = 3;
-const brickColumnCount = 5;
-const brickWidth = 75;
-const brickHeight = 20;
-const brickPadding = 10;
-const brickOffsetTop = 30;
-const brickOffsetLeft = 30;
+    // Game Variables
+    let x, y, dx, dy, score, bricks;
+    const ballRadius = 8;
+    const paddleHeight = 8;
+    const paddleWidth = 75;
+    let paddleX;
+    let rightPressed = false;
+    let leftPressed = false;
 
-let score = 0;
-let bricks = [];
+    // Brick Configuration
+    const brickRowCount = 3;
+    const brickColumnCount = 5;
+    const brickWidth = 75;
+    const brickHeight = 15;
+    const brickPadding = 10;
+    const brickOffsetTop = 30;
+    const brickOffsetLeft = 25;
 
-// NEW: Function to set/reset the game state
-function resetGame() {
-    x = canvas.width / 2;
-    y = canvas.height - 30;
-    dx = 2; 
-    dy = -2;
-    paddleX = (canvas.width - paddleWidth) / 2;
-    score = 0;
+    // Controls
+    document.addEventListener("keydown", (e) => {
+        if(e.key === "Right" || e.key === "ArrowRight") rightPressed = true;
+        else if(e.key === "Left" || e.key === "ArrowLeft") leftPressed = true;
+    });
+    document.addEventListener("keyup", (e) => {
+        if(e.key === "Right" || e.key === "ArrowRight") rightPressed = false;
+        else if(e.key === "Left" || e.key === "ArrowLeft") leftPressed = false;
+    });
 
-    // Re-initialize bricks
-    for(let c=0; c<brickColumnCount; c++) {
-        bricks[c] = [];
-        for(let r=0; r<brickRowCount; r++) {
-            bricks[c][r] = { x: 0, y: 0, status: 1 };
+    function resetGame() {
+        const difficulty = parseInt(document.getElementById("speedSelect").value);
+        x = canvas.width / 2;
+        y = canvas.height - 30;
+        dx = difficulty;
+        dy = -difficulty;
+        paddleX = (canvas.width - paddleWidth) / 2;
+        score = 0;
+        
+        bricks = [];
+        for(let c=0; c<brickColumnCount; c++) {
+            bricks[c] = [];
+            for(let r=0; r<brickRowCount; r++) {
+                bricks[c][r] = { x: 0, y: 0, status: 1 };
+            }
         }
+        document.getElementById("gameState").innerText = "RUNNING";
     }
-}
 
-// Input listeners
-document.addEventListener("keydown", keyDownHandler);
-document.addEventListener("keyup", keyUpHandler);
-
-function keyDownHandler(e) {
-    if(e.key === "Right" || e.key === "ArrowRight") rightPressed = true;
-    else if(e.key === "Left" || e.key === "ArrowLeft") leftPressed = true;
-}
-
-function keyUpHandler(e) {
-    if(e.key === "Right" || e.key === "ArrowRight") rightPressed = false;
-    else if(e.key === "Left" || e.key === "ArrowLeft") leftPressed = false;
-}
-
-function collisionDetection() {
-    for(let c=0; c<brickColumnCount; c++) {
-        for(let r=0; r<brickRowCount; r++) {
-            let b = bricks[c][r];
-            if(b.status === 1) {
-                if(x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
-                    dy = -dy;
-                    b.status = 0;
-                    score++;
-                    if(score === brickRowCount * brickColumnCount) {
-                        alert("YOU WIN!");
-                        resetGame(); // Reset without reloading
+    function collisionDetection() {
+        for(let c=0; c<brickColumnCount; c++) {
+            for(let r=0; r<brickRowCount; r++) {
+                let b = bricks[c][r];
+                if(b.status === 1) {
+                    if(x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+                        dy = -dy;
+                        b.status = 0;
+                        score++;
+                        if(score === brickRowCount * brickColumnCount) {
+                            alert("SIMULATION COMPLETE: VICTORY");
+                            resetGame();
+                        }
                     }
                 }
             }
         }
     }
-}
 
-function drawBall() {
-    ctx.beginPath();
-    ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-    ctx.fillStyle = "#0095DD";
-    ctx.fill();
-    ctx.closePath();
-}
+    function drawBall() {
+        ctx.beginPath();
+        ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+        ctx.fillStyle = "#ffb703"; // Gold Ball
+        ctx.fill();
+        ctx.closePath();
+    }
 
-function drawPaddle() {
-    ctx.beginPath();
-    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-    ctx.fillStyle = "#0095DD";
-    ctx.fill();
-    ctx.closePath();
-}
+    function drawPaddle() {
+        ctx.beginPath();
+        ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+        ctx.fillStyle = "white";
+        ctx.fill();
+        ctx.closePath();
+    }
 
-function drawBricks() {
-    for(let c=0; c<brickColumnCount; c++) {
-        for(let r=0; r<brickRowCount; r++) {
-            if(bricks[c][r].status === 1) {
-                let brickX = (c*(brickWidth+brickPadding)) + brickOffsetLeft;
-                let brickY = (r*(brickHeight+brickPadding)) + brickOffsetTop;
-                bricks[c][r].x = brickX;
-                bricks[c][r].y = brickY;
-                ctx.beginPath();
-                ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                ctx.fillStyle = "#0095DD";
-                ctx.fill();
-                ctx.closePath();
+    function drawBricks() {
+        for(let c=0; c<brickColumnCount; c++) {
+            for(let r=0; r<brickRowCount; r++) {
+                if(bricks[c][r].status === 1) {
+                    let brickX = (c*(brickWidth+brickPadding)) + brickOffsetLeft;
+                    let brickY = (r*(brickHeight+brickPadding)) + brickOffsetTop;
+                    bricks[c][r].x = brickX;
+                    bricks[c][r].y = brickY;
+                    ctx.beginPath();
+                    ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                    ctx.fillStyle = "#2c3e50"; // Dark Blue-Gray bricks
+                    ctx.strokeStyle = "#ffb703";
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    ctx.fill();
+                    ctx.closePath();
+                }
             }
         }
     }
-}
 
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBricks();
-    drawBall();
-    drawPaddle();
-    collisionDetection();
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Update UI
+        document.getElementById("ballPos").innerText = `${Math.round(x)},${Math.round(y)}`;
+        document.getElementById("scoreVal").innerText = score;
 
-    if(x + dx > canvas.width - ballRadius || x + dx < ballRadius) dx = -dx;
-    if(y + dy < ballRadius) dy = -dy;
-    else if(y + dy > canvas.height - ballRadius) {
-        if(x > paddleX && x < paddleX + paddleWidth) dy = -dy;
-        else {
-            alert("GAME OVER");
-            resetGame(); // Reset without reloading
+        drawBricks();
+        drawBall();
+        drawPaddle();
+        collisionDetection();
+
+        // Bounce Logic
+        if(x + dx > canvas.width - ballRadius || x + dx < ballRadius) dx = -dx;
+        if(y + dy < ballRadius) dy = -dy;
+        else if(y + dy > canvas.height - ballRadius) {
+            if(x > paddleX && x < paddleX + paddleWidth) dy = -dy;
+            else {
+                document.getElementById("gameState").innerText = "FAILED";
+                alert("SYSTEM ERROR: BALL LOST");
+                resetGame();
+            }
         }
+
+        if(rightPressed && paddleX < canvas.width - paddleWidth) paddleX += 7;
+        else if(leftPressed && paddleX > 0) paddleX -= 7;
+
+        x += dx;
+        y += dy;
+        requestAnimationFrame(draw);
     }
 
-    if(rightPressed && paddleX < canvas.width - paddleWidth) paddleX += 7;
-    else if(leftPressed && paddleX > 0) paddleX -= 7;
-
-    x += dx;
-    y += dy;
-    requestAnimationFrame(draw);
-}
-
-// Initial call to start the game
-resetGame();
-draw();
+    resetGame();
+    draw();
 </script>
+
 </body>
 </html>
