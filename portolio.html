@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deniz Dalbasi | Portfolio</title>
+    <style>
+        :root {
+            --ubc-blue: #002145;
+            --ubc-gold: #ffb703;
+            --light-bg: #f4f7f9;
+        }
+
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 0; 
+            background-color: var(--light-bg); 
+        }
+
+        /* Hero Section */
+        header { 
+            background: var(--ubc-blue);
+            color: white; 
+            padding: 60px 20px; 
+            text-align: center; 
+            border-bottom: 5px solid var(--ubc-gold);
+        }
+
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 5px solid white;
+            object-fit: cover;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        header h1 { margin: 10px 0; font-size: 2.8rem; }
+        header p { font-size: 1.2rem; opacity: 0.9; margin: 5px 0; }
+        
+        .contact-links { margin-top: 20px; }
+        .contact-links a { 
+            color: var(--ubc-gold); 
+            text-decoration: none; 
+            margin: 0 15px; 
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .contact-links a:hover { color: white; }
+
+        /* Content Layout */
+        .container { padding: 40px 20px; }
+
+        section { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05); 
+            margin-bottom: 30px; 
+            transition: transform 0.3s ease;
+        }
+        section:hover { transform: translateY(-5px); }
+
+        h2 { 
+            color: var(--ubc-blue); 
+            border-left: 5px solid var(--ubc-gold);
+            padding-left: 15px;
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+
+        /* Skills Grid */
+        .skills-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 20px; 
+        }
+        .skill-category h4 { margin-bottom: 10px; color: #555; }
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
+        .tags li { 
+            background: #eef2f7; 
+            padding: 6px 12px; 
+            border-radius: 6px; 
+            font-size: 0.85rem; 
+            font-weight: 600;
+            border: 1px solid #d1d9e6;
+        }
+
+        /* Project Cards */
+        .project-card {
+            border-left: 3px solid #eee;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .project-card h3 { margin: 0; color: var(--ubc-blue); }
+        .project-tech { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        footer { text-align: center; padding: 40px; color: #999; font-size: 0.9rem; }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 2rem; }
+            .profile-img { width: 140px; height: 140px; }
+        }
+		/* This targets the links inside your project section */
+		.project-card h3 a, 
+		.project-card h3 a:visited {
+			color: #0056b3; /* Consistent blue color */
+			text-decoration: underline;
+			text-underline-offset: 4px;
+			transition: 0.3s;
+		}
+
+		/* Hover state for all of them */
+		.project-card h3 a:hover {
+			color: #ffb703; /* Changes to UBC gold when hovering */
+			text-decoration-thickness: 2px;
+		}
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="profile.jpeg" alt="Deniz Dalbasi" class="profile-img">
+        <h1>Deniz Dalbasi</h1>
+        <p>First Year Engineering @ UBC | Intended Computer Engineering</p>
+        <div class="contact-links">
+            <a href="https://linkedin.com/in/deniz-dalbasi">LinkedIn</a>
+            <a href="https://github.com/denizdalbasi">GitHub</a>
+            <a href="denizdalbasi2007@gmail.com">Email</a>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <section id="education">
+            <h2>Education</h2>
+            <div style="display: flex; justify-content: space-between;">
+                <div>
+                    <h3>University of British Columbia</h3>
+                    <p><strong>Bachelor of Applied Science (BASc)</strong></p>
+                    <p>Coursework: Computation, Data Science, Engineering Analysis, Physics (E&M)</p>
+                </div>
+                <div style="text-align: right; color: #777;">
+                    <strong>2025 - Present</strong><br>Vancouver, BC
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <h2>Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h4>Languages</h4>
+                    <ul class="tags">
+                        <li>Python</li> <li>C</li> <li>Java</li> <li>SQL</li> <li>R</li> <li>C++</li> <li> Racket</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h4>Engineering</h4>
+                    <ul class="tags">
+                        <li>Arduino</li> <li>SolidWorks</li> <li>MATLAB</li> <li>Git</li> <li>TensorFlow</li> 
+                    </ul>
+                </div>
+                <div class="skill-category">
+					<h4>Languages</h4>
+					<ul class="tags">
+						<li>Turkish (Native)</li>
+						<li>Russian (Native)</li>
+						<li>English (Fluent)</li>
+						<li>German (Intermediate)</li>
+						<li>French (Elementary)</li>
+					</ul>
+</div>
+            </div>
+        </section>
+
+        <section id="projects">
+			<h2>Featured Projects</h2>
+			
+			<div class="project-card">
+				<h3><a href="mechanical-claw.html" target="_blank" rel="noopener noreferrer">Mechanical Claw</a></h3>
+				<span class="project-tech">Arduino | C++ | SolidWorks</span>
+			</div>
+
+			<div class="project-card">
+				<h3><a href="minecraft-predictor.html" target="_blank" rel="noopener noreferrer">Minecraft Predictor</a></h3>
+				<span class="project-tech">Java | Algorithms</span>
+			</div>
+
+			<div class="project-card">
+				<h3><a href="autonomous-agent.html" target="_blank" rel="noopener noreferrer">Autonomous Agent</a></h3>
+				<span class="project-tech">Python | Telegram API</span>
+			</div>
+
+			<div class="project-card">
+				<h3><a href="denigor-ascend.html" target="_blank" rel="noopener noreferrer">Denigor Ascend</a></h3>
+				<span class="project-tech">Java | OOP</span>
+			</div>
+		</section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Deniz Dalbasi • Built with Engineering Precision</p>
+    </footer>
+
+</body>
+</html>

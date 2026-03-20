@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autonomous Agent | Deniz Dalbasi</title>
+    <style>
+        :root { --ubc-blue: #002145; --ubc-gold: #ffb703; --light-bg: #f4f7f9; }
+        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; background-color: var(--light-bg); padding: 0 20px 50px 20px; }
+        
+        header { background: var(--ubc-blue); color: white; padding: 60px 20px; text-align: center; border-bottom: 5px solid var(--ubc-gold); margin: 0 -20px 30px -20px; }
+        .back-link { color: var(--ubc-gold); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px; }
+        
+        section { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        h2 { color: var(--ubc-blue); border-left: 5px solid var(--ubc-gold); padding-left: 15px; margin-top: 0; }
+        
+        .tech-tag { background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid white; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; margin: 5px; display: inline-block; }
+        
+        .code-block { background: #2d2d2d; color: #f8f8f2; padding: 20px; border-radius: 8px; font-family: 'Courier New', monospace; overflow-x: auto; font-size: 0.9rem; }
+        
+        .external-link { display: inline-block; margin-top: 25px; padding: 12px 25px; background: var(--ubc-blue); color: white; text-decoration: none; border-radius: 8px; font-weight: bold; transition: 0.3s; }
+        .external-link:hover { background: var(--ubc-gold); color: var(--ubc-blue); }
+        
+        footer { text-align: center; margin-top: 40px; color: #999; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="back-link">← Back to Portfolio</a>
+        <h1>Autonomous Agent</h1>
+        <p>Telegram Automation & State Management</p>
+        <div style="margin-top:10px;">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">Telegram API</span>
+        </div>
+    </header>
+
+    <section>
+        <h2>Project Overview</h2>
+        <p>This autonomous agent was developed to streamline user onboarding processes through a Telegram interface. By implementing a **Finite State Machine (FSM)**, the bot maintains context across multiple user interactions, ensuring a logical and error-free data collection flow.</p>
+    </section>
+
+    <section>
+        <h2>Technical Deep-Dive</h2>
+        <p>The core of the agent is built on asynchronous Python, allowing it to handle hundreds of concurrent users without blocking the main event loop. Each state in the onboarding process (e.g., Name Entry -> Email Verification -> Completion) is strictly defined to prevent "illegal" transitions.</p>
+        
+        <h3>Key Features:</h3>
+        <ul>
+            <li><strong>State Persistence:</strong> Uses a memory-based storage system to track where each user is in the funnel.</li>
+            <li><strong>Input Validation:</strong> Regular expression (Regex) checks for emails and custom commands.</li>
+            <li><strong>Error Handling:</strong> Automatic "Reset State" triggers if the user provides invalid data three times.</li>
+        </ul>
+
+        <a href="https://github.com/denizdalbasi/telegram-student-management-system" target="_blank" class="external-link">View Documentation on GitHub →</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Deniz Dalbasi</p>
+    </footer>
+
+</body>
+</html>
