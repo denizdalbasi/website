@@ -5,20 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deniz Dalbasi | Portfolio</title>
     <style>
+        /* 1. Theme Variables */
         :root {
             --ubc-blue: #002145;
             --ubc-gold: #ffb703;
-            --light-bg: #f4f7f9;
+            --bg-color: #f4f7f9;
+            --text-color: #333;
+            --section-bg: #ffffff;
+            --accent-color: var(--ubc-blue);
+            --card-shadow: rgba(0,0,0,0.05);
+        }
+
+        body.dark-theme {
+            --bg-color: #0b141d;
+            --text-color: #e0e0e0;
+            --section-bg: #16222e;
+            --accent-color: var(--ubc-gold);
+            --card-shadow: rgba(0,0,0,0.4);
         }
 
         body { 
             font-family: 'Segoe UI', system-ui, sans-serif; 
             line-height: 1.6; 
-            color: #333; 
+            color: var(--text-color); 
             max-width: 1000px; 
             margin: 0 auto; 
             padding: 0; 
-            background-color: var(--light-bg); 
+            background-color: var(--bg-color); 
+            transition: 0.3s ease;
         }
 
         /* Hero Section */
@@ -43,40 +57,51 @@
         header h1 { margin: 10px 0; font-size: 2.8rem; }
         header p { font-size: 1.2rem; opacity: 0.9; margin: 5px 0; }
         
-        .contact-links { margin-top: 20px; }
+        .contact-links { margin: 20px 0; }
         .contact-links a { 
-			display: inline-block; /* Essential for padding to work correctly */
-			color: var(--ubc-gold); 
-			text-decoration: none; 
-			margin: 0 15px; 
-			padding: 12px 25px; /* Increase these numbers to make buttons bigger */
-			font-weight: 600;
-			font-size: 1.1rem; /* Makes the text slightly larger */
-			border: 2px solid var(--ubc-gold);
-			border-radius: 8px;
-			transition: 0.3s;
-		}
-        .contact-links a:hover { color: white; }
+            display: inline-block;
+            color: var(--ubc-gold); 
+            text-decoration: none; 
+            margin: 10px 15px; 
+            padding: 12px 25px;
+            font-weight: 600;
+            border: 2px solid var(--ubc-gold);
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .contact-links a:hover { background: var(--ubc-gold); color: var(--ubc-blue); }
+
+        #theme-toggle {
+            background: none;
+            border: 1px solid var(--ubc-gold);
+            color: var(--ubc-gold);
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
 
         /* Content Layout */
         .container { padding: 40px 20px; }
 
         section { 
-            background: white; 
+            background: var(--section-bg); 
             padding: 30px; 
             border-radius: 15px; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05); 
+            box-shadow: 0 5px 20px var(--card-shadow); 
             margin-bottom: 30px; 
             transition: transform 0.3s ease;
         }
         section:hover { transform: translateY(-5px); }
 
         h2 { 
-            color: var(--ubc-blue); 
+            color: var(--accent-color); 
             border-left: 5px solid var(--ubc-gold);
             padding-left: 15px;
             margin-top: 0;
             font-size: 1.5rem;
+            transition: color 0.3s;
         }
 
         /* Skills Grid */
@@ -85,16 +110,48 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
             gap: 20px; 
         }
-        .skill-category h4 { margin-bottom: 10px; color: #555; }
+        .skill-category h4 { margin-bottom: 10px; color: #777; }
+        
         .tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
-        .tags li { 
-            background: #eef2f7; 
+        
+        .tags li {
+            background: #eef2f7;
+            color: #333;
             padding: 6px 12px; 
             border-radius: 6px; 
             font-size: 0.85rem; 
             font-weight: 600;
             border: 1px solid #d1d9e6;
+            position: relative;
+            cursor: help;
+            transition: 0.3s;
         }
+
+        body.dark-theme .tags li {
+            background: #2c3e50;
+            color: var(--ubc-gold);
+            border-color: var(--ubc-gold);
+        }
+
+        /* Tooltip Logic */
+        .tags li::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.2s;
+            z-index: 100;
+        }
+        .tags li:hover::after { opacity: 1; visibility: visible; }
 
         /* Project Cards */
         .project-card {
@@ -102,7 +159,13 @@
             padding-left: 20px;
             margin-bottom: 30px;
         }
-        .project-card h3 { margin: 0; color: var(--ubc-blue); }
+        .project-card h3 a { 
+            color: var(--accent-color);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            transition: 0.3s;
+        }
+        .project-card h3 a:hover { color: var(--ubc-gold); }
         .project-tech { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
 
         footer { text-align: center; padding: 40px; color: #999; font-size: 0.9rem; }
@@ -111,108 +174,31 @@
             header h1 { font-size: 2rem; }
             .profile-img { width: 140px; height: 140px; }
         }
-		/* This targets the links inside your project section */
-		.project-card h3 a, 
-		.project-card h3 a:visited {
-			color: #0056b3; /* Consistent blue color */
-			text-decoration: underline;
-			text-underline-offset: 4px;
-			transition: 0.3s;
-		}
-
-		/* Hover state for all of them */
-		.project-card h3 a:hover {
-			color: #ffb703; /* Changes to UBC gold when hovering */
-			text-decoration-thickness: 2px;
-		}
-		/* 1. Define Theme Variables */
-		:root {
-			--ubc-blue: #002145;
-			--ubc-gold: #ffb703;
-			--bg-color: #f4f7f9;
-			--text-color: #333;
-			--section-bg: #ffffff;
-			--card-shadow: rgba(0,0,0,0.05);
-		}
-
-		/* 2. Dark Mode Overrides */
-		body.dark-theme {
-			--bg-color: #0b141d;
-			--text-color: #e0e0e0;
-			--section-bg: #16222e;
-			--card-shadow: rgba(0,0,0,0.4);
-		}
-
-		/* 3. Apply Variables to Elements */
-		body { 
-			background-color: var(--bg-color); 
-			color: var(--text-color); 
-			transition: 0.3s ease; /* Smooth transition when switching */
-		}
-
-		section { 
-			background: var(--section-bg); 
-			box-shadow: 0 5px 20px var(--card-shadow);
-		}
-
-		/* 4. Tooltip Logic for Skills */
-		.tags li {
-			position: relative;
-			cursor: help;
-		}
-
-		.tags li::after {
-			content: attr(data-tooltip);
-			position: absolute;
-			bottom: 125%;
-			left: 50%;
-			transform: translateX(-50%);
-			background: #333;
-			color: #fff;
-			padding: 5px 10px;
-			border-radius: 4px;
-			font-size: 0.75rem;
-			white-space: nowrap;
-			opacity: 0;
-			visibility: hidden;
-			transition: 0.2s;
-			z-index: 100;
-		}
-
-		.tags li:hover::after {
-			opacity: 1;
-			visibility: visible;
-		}
     </style>
 </head>
 <body>
 
     <header>
-    <img src="profile.jpeg" alt="Deniz Dalbasi" class="profile-img">
-    <h1>Deniz Dalbasi</h1>
-    <p>First Year Engineering @ UBC | Intended Computer Engineering</p>
-    <div class="contact-links">
-        <a href="https://linkedin.com/in/deniz-dalbasi" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        <a href="https://github.com/denizdalbasi" target="_blank" rel="noopener noreferrer">GitHub</a>
-    </div>
-	<header>
-    <button id="theme-toggle" style="background:none; border: 1px solid var(--ubc-gold); color: var(--ubc-gold); padding: 5px 15px; border-radius: 20px; cursor: pointer; margin-top: 15px;">
-        Switch Theme
-    </button>
-</header>
-</header>
+        <img src="profile.jpeg" alt="Deniz Dalbasi" class="profile-img">
+        <h1>Deniz Dalbasi</h1>
+        <p>First Year Engineering @ UBC | Intended Computer Engineering</p>
+        <div class="contact-links">
+            <a href="https://linkedin.com/in/deniz-dalbasi" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://github.com/denizdalbasi" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+        <button id="theme-toggle">🌙 Switch Theme</button>
+    </header>
 
     <div class="container">
-        
         <section id="education">
             <h2>Education</h2>
-            <div style="display: flex; justify-content: space-between;">
+            <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
                 <div>
                     <h3>University of British Columbia</h3>
                     <p><strong>Bachelor of Applied Science (BASc)</strong></p>
                     <p>Coursework: Computation, Data Science, Engineering Analysis, Physics (E&M)</p>
                 </div>
-                <div style="text-align: right; color: #777;">
+                <div style="color: #777; min-width: 150px;">
                     <strong>2025 - Present</strong><br>Vancouver, BC
                 </div>
             </div>
@@ -222,86 +208,88 @@
             <h2>Skills</h2>
             <div class="skills-grid">
                 <div class="skill-category">
-                    <h4>Languages</h4>
+                    <h4>Technical Stack</h4>
                     <ul class="tags">
-						<li data-tooltip="Used in many different projects">Python</li> 
-						<li data-tooltip="System-level programming">C</li> 
-						<li data-tooltip="Used for Denigor Ascend and in many more projects">Java</li> 
-						<li data-tooltip="Database management">SQL</li> 
-						<li data-tooltip="Statistical analysis for DSCI 100">R</li> 
-						<li data-tooltip="Used in ardinio applications">C++</li> 
-						<li data-tooltip="Functional programming basics">Racket</li>
-					</ul>
-                </div>
-                <div class="skill-category">
-                    <h4>Engineering</h4>
-                    <ul class="tags">
-                        <li>Arduino</li> <li>SolidWorks</li> <li>MATLAB</li> <li>Git</li> <li>TensorFlow</li> 
+                        <li data-tooltip="Primary for Data Science & Automation">Python</li> 
+                        <li data-tooltip="Low-level systems and memory management">C</li> 
+                        <li data-tooltip="Object-Oriented Programming (Games/Apps)">Java</li> 
+                        <li data-tooltip="Database architecture and querying">SQL</li> 
+                        <li data-tooltip="Statistical computing (DSCI 100)">R</li> 
+                        <li data-tooltip="Hardware interfacing & high performance">C++</li> 
+                        <li data-tooltip="Functional programming logic">Racket</li>
                     </ul>
                 </div>
                 <div class="skill-category">
-					<h4>Languages</h4>
-					<ul class="tags">
-						<li>Turkish (Native)</li>
-						<li>Russian (Native)</li>
-						<li>English (Fluent)</li>
-						<li>German (Intermediate)</li>
-						<li>French (Elementary)</li>
-					</ul>
-				</div>
+                    <h4>Engineering Tools</h4>
+                    <ul class="tags">
+                        <li data-tooltip="Microcontroller prototyping">Arduino</li> 
+                        <li data-tooltip="Computer-Aided Design (3D Modeling)">SolidWorks</li> 
+                        <li data-tooltip="Numerical computing & Simulation">MATLAB</li> 
+                        <li data-tooltip="Version control & Collaboration">Git</li> 
+                        <li data-tooltip="Machine Learning frameworks">TensorFlow</li> 
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h4>Communication</h4>
+                    <ul class="tags">
+                        <li data-tooltip="Native Fluency">Turkish</li>
+                        <li data-tooltip="Native Fluency">Russian</li>
+                        <li data-tooltip="Academic & Professional Fluency">English</li>
+                        <li data-tooltip="Intermediate Level">German</li>
+                        <li data-tooltip="Elementary Level">French</li>
+                    </ul>
+                </div>
             </div>
         </section>
 
         <section id="projects">
-			<h2>Featured Projects</h2>
-			
-			<div class="project-card">
-				<h3><a href="mechanical-claw.html" target="_blank" rel="noopener noreferrer">Mechanical Claw</a></h3>
-				<span class="project-tech">Arduino | C++ | SolidWorks</span>
-			</div>
-
-			<div class="project-card">
-				<h3><a href="minecraft-predictor.html" target="_blank" rel="noopener noreferrer">Minecraft Predictor</a></h3>
-				<span class="project-tech">Java | Algorithms</span>
-			</div>
-
-			<div class="project-card">
-				<h3><a href="autonomous-agent.html" target="_blank" rel="noopener noreferrer">Autonomous Agent</a></h3>
-				<span class="project-tech">Python | Telegram API</span>
-			</div>
-
-			<div class="project-card">
-				<h3><a href="denigor-ascend.html" target="_blank" rel="noopener noreferrer">Denigor Ascend</a></h3>
-				<span class="project-tech">Java | OOP</span>
-			</div>
-		</section>
-
+            <h2>Featured Projects</h2>
+            <div class="project-card">
+                <h3><a href="mechanical-claw.html" target="_blank" rel="noopener noreferrer">Mechanical Claw</a></h3>
+                <p>An automated sorting system using C++ and hardware prototyping.</p>
+                <span class="project-tech">Arduino | C++ | SolidWorks</span>
+            </div>
+            <div class="project-card">
+                <h3><a href="minecraft-predictor.html" target="_blank" rel="noopener noreferrer">Minecraft Predictor</a></h3>
+                <p>A seed analysis tool built with custom optimization algorithms.</p>
+                <span class="project-tech">Java | Algorithms</span>
+            </div>
+            <div class="project-card">
+                <h3><a href="autonomous-agent.html" target="_blank" rel="noopener noreferrer">Autonomous Agent</a></h3>
+                <p>Real-time Telegram bot for automated student record management.</p>
+                <span class="project-tech">Python | Telegram API</span>
+            </div>
+            <div class="project-card">
+                <h3><a href="denigor-ascend.html" target="_blank" rel="noopener noreferrer">Denigor Ascend</a></h3>
+                <p>Physics-based vertical platformer game with OOP architecture.</p>
+                <span class="project-tech">Java | OOP</span>
+            </div>
+        </section>
     </div>
 
     <footer>
         <p>&copy; 2026 Deniz Dalbasi • Built with Engineering Precision</p>
     </footer>
-	<script>
-		const themeBtn = document.getElementById("theme-toggle");
-		const body = document.body;
 
-		// Check LocalStorage on page load
-		if (localStorage.getItem("portfolio-theme") === "dark") {
-			body.classList.add("dark-theme");
-			themeBtn.textContent = "Light Mode";
-		}
+    <script>
+        const themeBtn = document.getElementById("theme-toggle");
+        const body = document.body;
 
-		themeBtn.addEventListener("click", () => {
-			body.classList.toggle("dark-theme");
-			
-			if (body.classList.contains("dark-theme")) {
-				localStorage.setItem("portfolio-theme", "dark");
-				themeBtn.textContent = "Light Mode";
-			} else {
-				localStorage.setItem("portfolio-theme", "light");
-				themeBtn.textContent = "Dark Mode";
-			}
-		});
-	</script>
+        if (localStorage.getItem("portfolio-theme") === "dark") {
+            body.classList.add("dark-theme");
+            themeBtn.textContent = "☀️ Light Mode";
+        }
+
+        themeBtn.addEventListener("click", () => {
+            body.classList.toggle("dark-theme");
+            if (body.classList.contains("dark-theme")) {
+                localStorage.setItem("portfolio-theme", "dark");
+                themeBtn.textContent = "☀️ Light Mode";
+            } else {
+                localStorage.setItem("portfolio-theme", "light");
+                themeBtn.textContent = "🌙 Dark Mode";
+            }
+        });
+    </script>
 </body>
 </html>
