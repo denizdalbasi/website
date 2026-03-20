@@ -116,14 +116,15 @@
         <div class="bar-container" id="container"></div>
 
         <div class="sidebar">
-            <h3>System Documentation</h3>
-            <ul>
-                <li><strong>Data Initialization:</strong> Use <span class="highlight">[ NEW DATA ]</span> to generate a randomized integer array within the workspace.</li>
-                <li><strong>Algorithm Selection:</strong> Choose a sorting heuristic. Each algorithm possesses unique <span class="highlight">Time Complexity</span> ($O$) and memory overhead.</li>
-                <li><strong>Execution:</strong> Click <span class="highlight">EXECUTE</span> to begin the visualization. Red bars indicate active pointer comparisons.</li>
-                <li><strong>Simulation Speed:</strong> Adjust the slider to modify the delay between atomic operations (comparisons and swaps).</li>
-            </ul>
-        </div>
+			<h3>User Guide</h3>
+			<ul>
+				<li><strong>Generate:</strong> Use <span class="highlight">[ NEW DATA ]</span> to scramble the bars into a random mess.</li>
+				<li><strong>Pick a Method:</strong> Choose a Algorithm like <span class="highlight">Bubble Sort</span></li>
+				<li><strong>Simulation:</strong> Click <span class="highlight">EXECUTE</span>. <span style="color:var(--compare-color)">Red</span> bars show the computer making a choice.</li>
+				<li><strong>Control Speed:</strong> Use the slider to slow down the action if you want to see exactly how the bars are moving.</li>
+				<li><strong>Success:</strong> Once the bars turn <span style="color:var(--sorted-color)">Green</span>, the data is perfectly organized from shortest to tallest.</li>
+			</ul>
+		</div>
 
         <div class="stats">
             [SYS] STATE: <span id="state-ui" class="highlight">IDLE</span> | 
