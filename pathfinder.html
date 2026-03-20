@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Console: A* Pathfinding Visualizer</title>
+    <style>
+        :root {
+            --bg-color: #0b141d; /* Matches your dark theme */
+            --console-border: #ffb703; /* UBC Gold */
+            --text-color: #e0e0e0;
+            --empty-color: #ffffff10; /* Very faint empty cells */
+            --wall-color: #ff3c3c; /* Alert red */
+            --start-color: #4caf50; /* Go green */
+            --end-color: #2196f3; /* End blue */
+            --visited-color: #ffb70360; /* Faint gold */
+            --path-color: #ffb703; /* Full gold */
+        }
+
+        body { font-family: 'Courier New', monospace; background: var(--bg-color); color: var(--text-color); padding: 20px; }
+        
+        #controls {
+            border: 1px solid var(--console-border);
+            padding: 15px;
+            margin-bottom: 20px;
+            background: rgba(255,183,3,0.05);
+            display: flex; gap: 15px; flex-wrap: wrap; align-items: center;
+        }
+
+        button, select {
+            background: none; border: 1px solid var(--console-border);
+            color: var(--console-border); padding: 8px 16px;
+            font-family: 'Courier New', monospace; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        button:hover { background: var(--console-border); color: var(--bg-color); }
+        select { background: var(--bg-color); }
+
+        #visualizer-canvas {
+            border: 2px solid var(--console-border);
+            display: block;
+            image-rendering: pixelated; /* Ensures sharp grid lines */
+        }
+
+        .telemetry {
+            font-size: 0.8rem; color: #888; margin-top: 10px;
+            border-top: 1px solid #333; padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>Shortest Path Finder</h2>
+    </header>
+
+    <div id="controls">
+        <label>Grid Size:</label>
+        <select id="grid-size" onchange="resetGrid()">
+            <option value="15">15x15</option>
+            <option value="25" selected>25x25</option>
+            <option value="40">40x40</option>
+        </select>
+
+        <label>Draw Mode:</label>
+        <select id="draw-mode">
+            <option value="wall" selected>Draw Wall</option>
+            <option value="start">Set Start</option>
+            <option value="end">Set End</option>
+        </select>
+
+        <button onclick="startVisualizer()">> Visualize</button>
+        <button onclick="clearGrid()">Clear Path</button>
+        <button onclick="resetGrid()">Reset Grid</button>
+    </div>
+
+    <canvas id="visualizer-canvas"></canvas>
+
+    <div class="telemetry">
+        [SYS] State: <span id="sys-state">IDLE</span> | 
+        Start: (<span id="start-coord">?,?</span>) | 
+        End: (<span id="end-coord">?,?</span>) | 
+        Visited: <span id="visited-count">0</span>
+    </div>
+
+    <script src="pathfinder.js"></script>
+</body>
+</html>
