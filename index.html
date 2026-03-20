@@ -288,7 +288,7 @@
 		// Check LocalStorage on page load
 		if (localStorage.getItem("portfolio-theme") === "dark") {
 			body.classList.add("dark-theme");
-			themeBtn.textContent = "☀️ Light Mode";
+			themeBtn.textContent = "Light Mode";
 		}
 
 		themeBtn.addEventListener("click", () => {
@@ -296,10 +296,10 @@
 			
 			if (body.classList.contains("dark-theme")) {
 				localStorage.setItem("portfolio-theme", "dark");
-				themeBtn.textContent = "☀️ Light Mode";
+				themeBtn.textContent = "Light Mode";
 			} else {
 				localStorage.setItem("portfolio-theme", "light");
-				themeBtn.textContent = "🌙 Dark Mode";
+				themeBtn.textContent = "Dark Mode";
 			}
 		});
 	</script>
