@@ -125,6 +125,64 @@
 			color: #ffb703; /* Changes to UBC gold when hovering */
 			text-decoration-thickness: 2px;
 		}
+		/* 1. Define Theme Variables */
+		:root {
+			--ubc-blue: #002145;
+			--ubc-gold: #ffb703;
+			--bg-color: #f4f7f9;
+			--text-color: #333;
+			--section-bg: #ffffff;
+			--card-shadow: rgba(0,0,0,0.05);
+		}
+
+		/* 2. Dark Mode Overrides */
+		body.dark-theme {
+			--bg-color: #0b141d;
+			--text-color: #e0e0e0;
+			--section-bg: #16222e;
+			--card-shadow: rgba(0,0,0,0.4);
+		}
+
+		/* 3. Apply Variables to Elements */
+		body { 
+			background-color: var(--bg-color); 
+			color: var(--text-color); 
+			transition: 0.3s ease; /* Smooth transition when switching */
+		}
+
+		section { 
+			background: var(--section-bg); 
+			box-shadow: 0 5px 20px var(--card-shadow);
+		}
+
+		/* 4. Tooltip Logic for Skills */
+		.tags li {
+			position: relative;
+			cursor: help;
+		}
+
+		.tags li::after {
+			content: attr(data-tooltip);
+			position: absolute;
+			bottom: 125%;
+			left: 50%;
+			transform: translateX(-50%);
+			background: #333;
+			color: #fff;
+			padding: 5px 10px;
+			border-radius: 4px;
+			font-size: 0.75rem;
+			white-space: nowrap;
+			opacity: 0;
+			visibility: hidden;
+			transition: 0.2s;
+			z-index: 100;
+		}
+
+		.tags li:hover::after {
+			opacity: 1;
+			visibility: visible;
+		}
     </style>
 </head>
 <body>
@@ -137,6 +195,11 @@
         <a href="https://linkedin.com/in/deniz-dalbasi" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         <a href="https://github.com/denizdalbasi" target="_blank" rel="noopener noreferrer">GitHub</a>
     </div>
+	<header>
+    <button id="theme-toggle" style="background:none; border: 1px solid var(--ubc-gold); color: var(--ubc-gold); padding: 5px 15px; border-radius: 20px; cursor: pointer; margin-top: 15px;">
+        Switch Theme
+    </button>
+</header>
 </header>
 
     <div class="container">
@@ -161,8 +224,14 @@
                 <div class="skill-category">
                     <h4>Languages</h4>
                     <ul class="tags">
-                        <li>Python</li> <li>C</li> <li>Java</li> <li>SQL</li> <li>R</li> <li>C++</li> <li> Racket</li>
-                    </ul>
+						<li data-tooltip="Used in many different projects">Python</li> 
+						<li data-tooltip="System-level programming">C</li> 
+						<li data-tooltip="Used for Denigor Ascend and in many more projects">Java</li> 
+						<li data-tooltip="Database management">SQL</li> 
+						<li data-tooltip="Statistical analysis for DSCI 100">R</li> 
+						<li data-tooltip="Used in ardinio applications">C++</li> 
+						<li data-tooltip="Functional programming basics">Racket</li>
+					</ul>
                 </div>
                 <div class="skill-category">
                     <h4>Engineering</h4>
@@ -179,7 +248,7 @@
 						<li>German (Intermediate)</li>
 						<li>French (Elementary)</li>
 					</ul>
-</div>
+				</div>
             </div>
         </section>
 
@@ -212,6 +281,27 @@
     <footer>
         <p>&copy; 2026 Deniz Dalbasi • Built with Engineering Precision</p>
     </footer>
+	<script>
+		const themeBtn = document.getElementById("theme-toggle");
+		const body = document.body;
 
+		// Check LocalStorage on page load
+		if (localStorage.getItem("portfolio-theme") === "dark") {
+			body.classList.add("dark-theme");
+			themeBtn.textContent = "☀️ Light Mode";
+		}
+
+		themeBtn.addEventListener("click", () => {
+			body.classList.toggle("dark-theme");
+			
+			if (body.classList.contains("dark-theme")) {
+				localStorage.setItem("portfolio-theme", "dark");
+				themeBtn.textContent = "☀️ Light Mode";
+			} else {
+				localStorage.setItem("portfolio-theme", "light");
+				themeBtn.textContent = "🌙 Dark Mode";
+			}
+		});
+	</script>
 </body>
 </html>
