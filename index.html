@@ -45,12 +45,17 @@
         
         .contact-links { margin-top: 20px; }
         .contact-links a { 
-            color: var(--ubc-gold); 
-            text-decoration: none; 
-            margin: 0 15px; 
-            font-weight: 600;
-            transition: 0.3s;
-        }
+			display: inline-block; /* Essential for padding to work correctly */
+			color: var(--ubc-gold); 
+			text-decoration: none; 
+			margin: 0 15px; 
+			padding: 12px 25px; /* Increase these numbers to make buttons bigger */
+			font-weight: 600;
+			font-size: 1.1rem; /* Makes the text slightly larger */
+			border: 2px solid var(--ubc-gold);
+			border-radius: 8px;
+			transition: 0.3s;
+		}
         .contact-links a:hover { color: white; }
 
         /* Content Layout */
