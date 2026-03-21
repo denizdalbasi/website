@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UBC Engineering | Orbital Lander Sim</title>
+    <style>
+        body { 
+            margin: 0; 
+            background: #0b141d; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
+
+        /* Main Container for Game + Sidebar */
+        #main-wrapper {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        /* Game Screen Styling */
+        #game-container { 
+            position: relative; 
+            border: 3px solid #ffb703; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            box-shadow: 0 0 20px rgba(255, 183, 3, 0.2);
+        }
+
+        canvas { 
+            background: url('space_background.jpg') no-repeat center center;
+            background-size: cover; 
+			display: block;
+        }
+
+        /* UI Overlays */
+        .ui { 
+            position: absolute; 
+            top: 15px; 
+            width: 90%; 
+            display: flex; 
+            justify-content: space-between; 
+            color: #ffb703; 
+            font-weight: bold; 
+            pointer-events: none; 
+            text-shadow: 1px 1px 2px black; 
+            padding: 0 15px; 
+        }
+
+        #msg { 
+            position: absolute; 
+            top: 40%; 
+            width: 100%; 
+            text-align: center; 
+            color: #ffb703; 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+            pointer-events: none; 
+        }
+
+        /* Rules Sidebar Styling */
+			#rules-panel {
+		width: 320px;
+		background: #0b141d; /* Matches background */
+		border: 2px solid #ffb703;
+		border-radius: 2px; /* Sharp corners instead of rounded */
+		padding: 20px;
+		color: #ffb703; /* Terminal Gold */
+		
+		/* The core 'Retro' look */
+		font-family: 'Courier New', Courier, monospace; 
+		font-size: 0.95rem;
+		line-height: 1.5;
+	}
+
+	#rules-panel h2 { 
+		color: #ffb703; 
+		margin-top: 0; 
+		border-bottom: 2px solid #ffb703;
+		padding-bottom: 5px;
+		font-family: 'Courier New', Courier, monospace;
+		letter-spacing: 2px;
+	}
+
+	#rules-panel ul { 
+		list-style-type: square; /* Classic retro bullet points */
+		padding-left: 20px;
+	}
+
+	#rules-panel li { 
+		margin-bottom: 15px; 
+	}
+
+	#rules-panel .key { 
+		background: #ffb703; 
+		color: #0b141d; 
+		padding: 1px 5px; 
+		font-weight: bold;
+		font-family: sans-serif; /* Keep buttons clean */
+	} 
+		</style>
+</head>
+<body>
+
+    <div id="main-wrapper">
+        <div id="game-container">
+            <div class="ui">
+                <div>VERTICAL SPEED: <span id="v-vel">0.0</span> m/s</div>
+                <div>FUEL: <span id="fuel">100</span>% | FLOOR: <span id="floor-num">1</span></div>
+            </div>
+            <div id="msg"></div>
+            <canvas id="simCanvas" width="500" height="700"></canvas>
+        </div>
+
+        <div id="rules-panel">
+            <h2>MISSION SPECS</h2>
+            <ul>
+                <li><strong>Controls:</strong> Use <span class="key">▲</span> to thrust, <span class="key">◄</span> <span class="key">►</span> to steer.</li>
+                <li><strong>Safe Landing:</strong> You must touch down at a speed slower than <strong>2.1 m/s</strong>.</li>
+                <li><strong>Objective:</strong> Land on <strong>both</strong> platforms on the current floor to ascend.</li>
+                <li><strong>Refuel:</strong> Fuel resets to 100% every time you land safely.</li>
+                <li><strong>Danger:</strong> Don't hit platforms too fast or fall below the camera view!</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        const msgEl = document.getElementById('msg');
+
+        let ship, platforms, cameraY, targetCameraY, currentFloor, landedOnFloor, keys = {};
+        const SAFE_V_SPEED = 2.1; 
+
+        function init() {
+            ship = { x: 250, y: 635, vx: 0, vy: 0, fuel: 100, dead: false };
+            platforms = [{ x: 0, y: 650, w: 500, isGround: true, floor: 0 }];
+            cameraY = 0;
+            targetCameraY = 0;
+            currentFloor = 1;
+            landedOnFloor = 0;
+            generateFloor(targetCameraY, 1);
+            msgEl.innerText = "";
+        }
+
+        function generateFloor(baseY, floorNum) {
+            platforms.push({
+                x: 50 + Math.random() * 100,
+                y: baseY + 350,
+                w: 70,
+                floor: floorNum,
+                landed: false
+            });
+            platforms.push({
+                x: 300 + Math.random() * 100,
+                y: baseY + 150,
+                w: 70,
+                floor: floorNum,
+                landed: false
+            });
+        }
+
+        window.onkeydown = (e) => keys[e.code] = true;
+        window.onkeyup = (e) => keys[e.code] = false;
+
+        function update() {
+            if (ship.dead) return;
+
+            ship.vy += 0.04; 
+
+            if (ship.fuel > 0) {
+                if (keys['ArrowUp']) { ship.vy -= 0.08; ship.fuel -= 0.15; } 
+                if (keys['ArrowLeft']) { ship.vx -= 0.04; ship.fuel -= 0.05; }
+                if (keys['ArrowRight']) { ship.vx += 0.04; ship.fuel -= 0.05; }
+            }
+
+            ship.x += ship.vx;
+            ship.y += ship.vy;
+
+            cameraY += (targetCameraY - cameraY) * 0.1;
+
+            platforms.forEach(p => {
+                if (ship.vy > 0 && ship.x > p.x && ship.x < p.x + p.w &&
+                    ship.y + 15 > p.y && ship.y + 15 < p.y + 12) {
+                    
+                    if (Math.abs(ship.vy) <= SAFE_V_SPEED) { 
+                        ship.vy = 0;
+                        ship.vx = 0;
+                        ship.y = p.y - 15;
+                        ship.fuel = 100;
+
+                        if (!p.landed && p.floor === currentFloor) {
+                            p.landed = true;
+                            landedOnFloor++;
+                            if (landedOnFloor >= 2) nextFloor();
+                        }
+                    } else if (!p.isGround) {
+                        ship.dead = true;
+                        msgEl.innerText = "CRITICAL IMPACT";
+                        setTimeout(init, 2000);
+                    }
+                }
+            });
+
+            if (ship.x < 0) ship.x = canvas.width;
+            if (ship.x > canvas.width) ship.x = 0;
+            if (ship.y > cameraY + 750) {
+                ship.dead = true;
+                msgEl.innerText = "ALTITUDE LOST";
+                setTimeout(init, 2000);
+            }
+
+            document.getElementById('v-vel').innerText = Math.abs(ship.vy).toFixed(1);
+            document.getElementById('fuel').innerText = Math.max(0, Math.round(ship.fuel));
+            document.getElementById('floor-num').innerText = currentFloor;
+        }
+
+        function nextFloor() {
+            currentFloor++;
+            landedOnFloor = 0;
+            targetCameraY -= 500;
+            generateFloor(targetCameraY, currentFloor);
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.translate(0, -cameraY);
+
+            platforms.forEach(p => {
+                ctx.fillStyle = p.landed ? "#FFFFFF" : "#ffb703"; 
+                if(p.isGround) ctx.globalAlpha = 0.3;
+                ctx.fillRect(p.x, p.y, p.w, 10);
+                ctx.globalAlpha = 1.0;
+            });
+
+            ctx.translate(ship.x, ship.y);
+            ctx.fillStyle = ship.dead ? "#e74c3c" : "#ffb703";
+            ctx.beginPath();
+            ctx.moveTo(0, -15);
+            ctx.lineTo(10, 15);
+            ctx.lineTo(-10, 15);
+            ctx.closePath();
+            ctx.fill();
+
+            if (keys['ArrowUp'] && ship.fuel > 0 && !ship.dead) {
+                ctx.save();
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = "#ff4500";
+                ctx.fillStyle = "#ffcc00"; 
+                ctx.beginPath();
+                ctx.moveTo(-5, 15); ctx.lineTo(0, 30); ctx.lineTo(5, 15);
+                ctx.fill();
+                ctx.restore();
+            }
+            ctx.restore();
+
+            update();
+            requestAnimationFrame(draw);
+        }
+
+        init();
+        draw();
+    </script>
+</body>
+</html>
