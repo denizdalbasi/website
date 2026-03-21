@@ -313,40 +313,57 @@
 
     <div class="container">
         <section id="education">
-            <h2>Education</h2>
-            <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
-                <div>
-                    <h3>University of British Columbia</h3>
-                    <p><strong>Bachelor of Applied Science (BASc)</strong></p>
-                    <p>Coursework: Computation, Data Science, Engineering Analysis, Physics (E&M)</p>
-                </div>
-                <div style="color: #777; min-width: 150px;">
-                    <strong>2025 - Present</strong><br>Vancouver, BC
-                </div>
-            </div>
-        </section>
+			<div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
+				<div style="flex: 1; min-width: 300px;">
+					<h2>Education</h2>
+					<h3>University of British Columbia</h3>
+					<p><strong>PROGRAM:</strong> Bachelor of Applied Science (BASc)</p>
+					<p><strong>INTENDED_MAJOR:</strong> Computer Engineering</p>
+					
+					<div style="margin-top: 15px;">
+						<h4 style="color: #888; font-size: 0.8rem; text-transform: uppercase;">Engineering Core:</h4>
+						<ul class="tags">
+							<li data-tooltip="MATH 100/101/152">Engineering Math</li>
+							<li data-tooltip="PHYS 157/158/159">Engineering Physics</li>
+							<li data-tooltip="APSC 100/101">Engineering Design</li>
+							<li data-tooltip="CPSC 103/110">Computation</li>
+							<li data-tooltip="DSCI 100">Data Science</li>
+						</ul>
+					</div>
+				</div>
+
+				<div style="text-align: right; min-width: 150px; font-family: 'Courier New', Courier, monospace;">
+					<div style=="color: #777; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+						2025 — PRESENT
+					</div>
+					<div style="color: #777; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+						Vancouver, BC
+					</div>
+				</div>
+			</div>
+		</section>
 
         <section id="skills">
             <h2>Skills</h2>
             <div class="skills-grid">
                 <div class="skill-category">
                     <h4>Technical Stack</h4>
-                    <ul class="tags">
-                        <li data-tooltip="Primary for Data Science & Automation">Python</li> 
-                        <li data-tooltip="Low-level systems and memory management">C</li> 
-                        <li data-tooltip="Object-Oriented Programming (Games/Apps)">Java</li> 
-                        <li data-tooltip="Database architecture and querying">SQL</li> 
-                        <li data-tooltip="Statistical computing (DSCI 100)">R</li> 
-                        <li data-tooltip="Hardware interfacing & high performance">C++</li> 
-                        <li data-tooltip="Functional programming logic">Racket</li>
-                    </ul>
+					<ul class="tags">
+						<li data-tooltip="Data Science, Automation">Python</li> 
+						<li data-tooltip="Systems Programming & APSC 160">C</li> 
+						<li data-tooltip="Object-Oriented Programming">Java</li> 
+						<li data-tooltip="Database Management">SQL</li> 
+						<li data-tooltip="Statistical Models & DSCI 100">R</li> 
+						<li data-tooltip="Hardware Interfacing & Robotics">C++</li> 
+						<li data-tooltip="CPSC 110">Racket</li>
+					</ul>
                 </div>
                 <div class="skill-category">
                     <h4>Engineering Tools</h4>
                     <ul class="tags">
-                        <li data-tooltip="Microcontroller prototyping">Arduino</li> 
-                        <li data-tooltip="Computer-Aided Design (3D Modeling)">SolidWorks</li> 
-                        <li data-tooltip="Numerical computing & Simulation">MATLAB</li> 
+                        <li data-tooltip="Hardware interpiration">Arduino</li> 
+                        <li data-tooltip="3D Modeling">SolidWorks</li> 
+                        <li data-tooltip="Numerical computing">MATLAB</li> 
                         <li data-tooltip="Version control & Collaboration">Git</li> 
                         <li data-tooltip="Machine Learning frameworks">TensorFlow</li> 
                     </ul>
@@ -354,10 +371,10 @@
                 <div class="skill-category">
                     <h4>Communication</h4>
                     <ul class="tags">
-                        <li data-tooltip="Native Fluency">Turkish</li>
-                        <li data-tooltip="Native Fluency">Russian</li>
-                        <li data-tooltip="Academic & Professional Fluency">English</li>
-                        <li data-tooltip="Intermediate Level">German</li>
+                        <li data-tooltip="Native">Turkish</li>
+                        <li data-tooltip="Native">Russian</li>
+                        <li data-tooltip="Fluent">English</li>
+                        <li data-tooltip="Intermediate">German</li>
                         <li data-tooltip="Elementary Level">French</li>
                     </ul>
                 </div>
@@ -367,66 +384,80 @@
         <section id="projects">
             <h2>Featured Projects</h2>
             <div class="project-card">
-                <h3><a href="mechanical-claw.html" target="_blank" rel="noopener noreferrer">Mechanical Claw</a></h3>
-                <p>An automated sorting system using C++ and hardware prototyping.</p>
+                <h3><a href="mechanical-claw.html" target="_blank" rel="noopener noreferrer">MECHANICAL_CLAW</a></h3>
+                <p>An automated grabing system using C++ and hardware prototyping.</p>
                 <span class="project-tech">Arduino | C++ | SolidWorks</span>
             </div>
             
             <div class="project-card">
-                <h3><a href="minecraft-predictor.html" target="_blank" rel="noopener noreferrer">Minecraft Predictor</a></h3>
-                <p>A seed analysis tool built with custom optimization algorithms.</p>
-                <span class="project-tech">Java | Algorithms</span>
+                <h3><a href="minecraft-predictor.html" target="_blank" rel="noopener noreferrer">GAME_PREDICTOR</a></h3>
+                <p>A built model in R in predction of the data.</p>
+                <span class="project-tech">R | Predictive Modeling</span>
             </div>
             <div class="project-card">
-                <h3><a href="autonomous-agent.html" target="_blank" rel="noopener noreferrer">Autonomous Agent</a></h3>
+                <h3><a href="autonomous-agent.html" target="_blank" rel="noopener noreferrer">STUDENT_BOT</a></h3>
                 <p>Real-time Telegram bot for automated student record management.</p>
                 <span class="project-tech">Python | Telegram API</span>
             </div>
             <div class="project-card">
                 <h3><a href="denigor-ascend.html" target="_blank" rel="noopener noreferrer">Denigor Ascend</a></h3>
-                <p>Physics-based vertical platformer game with OOP architecture.</p>
+                <p>Physics-based interactive vertical platformer game with OOP architecture.</p>
                 <span class="project-tech">Java | OOP</span>
             </div>
 			</section>
             
             <section id="simulations" style="margin-top: 40px;">
-                <h2 style="color: var(--accent-color); border-left: 5px solid var(--ubc-gold); padding-left: 15px;">Interactive Simulations</h2>
-                
-                <div class="project-card">
-                    <h3><a href="pathfinder.html" target="_blank" rel="noopener noreferrer">Pathfinding Visualizer</a></h3>
-                    <p>An interactive solver implementing <strong>Dijkstra’s Algorithm</strong>.</p>
-                    <ul class="tags">
-                        <li data-tooltip="O(E + V log V) Complexity">Dijkstra's</li>
-                        <li data-tooltip="Grid-based Graph Modeling">Data Structures</li>
-                    </ul>
-                </div>
-
-                <div class="project-card">
-                    <h3><a href="Visualizer.html" target="_blank" rel="noopener noreferrer">Sorting algorithms</a></h3>
-                    <p>A benchmarking tool for <strong>sorting algorithm efficiency</strong>.</p>
-                    <ul class="tags">
-                        <li data-tooltip="Divide & Conquer Strategy">Merge Sort</li>
-                        <li data-tooltip="Recursive Partitioning">Quick Sort</li>
-                    </ul>
-                </div>
-                <div class="project-card">
-                    <h3><a href="block.html" target="_blank" rel="noopener noreferrer">Kinematic Collision Engine</a></h3>
-                    <p>A real-time <strong>Brick Breaker</strong> simulation focusing on physics.</p>
-                    <ul class="tags">
-                        <li data-tooltip="Vector Reflection Physics">Kinematics</li>
-                        <li data-tooltip="AABB Collision Logic">Collision Detection</li>
-                    </ul>
-                </div>
+				<h2>Interactive Simulations</h2>
+				
 				<div class="project-card">
-					<h3><a href="ship.html" target="_blank" rel="noopener noreferrer">Ship Lounch Similation</a></h3>
-					<p>A descent simulaton for a spaceship</p>
+					<h3><a href="pathfinder.html" target="_blank">ROUTE_FINDER</a></h3>
+					<p>A real-time implementation of <strong>Dijkstra’s Algorithm</strong> for grid-based navigation.</p>
+					<ul class="tags">
+						<li data-tooltip="Mapping">Navingtation/Pathfinder</li>
+						<li>Efficiency Analysis</li>
+					</ul>
 				</div>
-            </div>
-        </section>
+
+				<div class="project-card">
+					<h3><a href="Visualizer.html" target="_blank">SORT_AlGorithms</a></h3>
+					<p>A visualization of different sorting algorithms.</p>
+					<ul class="tags">
+						<li data-tooltip="Recursive Data Splitting">Merge Sort</li>
+						<li data-tooltip="Pivot-based Swapping">Quick Sort</li>
+						<li data-tooltip="Sequential Swap Cycles">Bubble Sort</li>
+						<li data-tooltip="Linear Element Shifting">Insertion Sort</li>
+					</ul>
+				</div>
+
+				<div style="text-align: center; margin: 20px 0;">
+					<button id="view-more-btn" style="background: none; border: 2px solid var(--ubc-gold); color: var(--accent-color); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+						+ View More Simulations
+					</button>
+				</div>
+
+				<div id="simulation-archive" style="display: none; border-top: 1px solid #eee; padding-top: 20px;">
+					<div class="project-card">
+						<h3><a href="ship.html" target="_blank">AERO_SIM-TERMINAL_DESC</a></h3>
+						<p>A mathematical game model of atmospheric descent using <strong>mechanical and computational laws.</strong></p>
+						<ul class="tags">
+							<li data-tooltip="Gravity & Thrust Modeling">Physics</li>
+						</ul>
+					</div>
+
+					<div class="project-card">
+						<h3><a href="block.html" target="_blank">BREAK_SHELL</a></h3>
+						<p>A 2D physics simulation modeling <strong> collisions</strong> and momentum conservation.</p>
+						<ul class="tags">
+							<li data-tooltip="Collision Logic">Collision Detection</li>
+							<li data-tooltip="State-based Updates">Object Architecture</li>
+						</ul>
+					</div>
+				</div>
+			</section>
     </div>
 
     <footer>
-        <p>&copy; 2026 Deniz Dalbasi • Built with Engineering Precision</p>
+        <p>&copy; 2026 Deniz Dalbasi • Built with Engineering Hearth</p>
     </footer>
 
     <script>
@@ -483,6 +514,19 @@
 					behavior: 'smooth'
 				});
 			});
+		});
+		const viewMoreBtn = document.getElementById("view-more-btn");
+		const archive = document.getElementById("simulation-archive");
+
+		viewMoreBtn.addEventListener("click", () => {
+			if (archive.style.display === "none") {
+				archive.style.display = "block";
+				viewMoreBtn.textContent = "- Show Fewer";
+				archive.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			} else {
+				archive.style.display = "none";
+				viewMoreBtn.textContent = "+ View More Simulations";
+			}
 		});
     </script>
 </body>
