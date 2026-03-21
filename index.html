@@ -12,17 +12,14 @@
         --bg-color: #f4f7f9;
         --text-color: #333;
         --section-bg: #ffffff;
-        /* This variable switches between Blue and Gold */
         --accent-color: var(--ubc-blue); 
         --card-shadow: rgba(0,0,0,0.05);
     }
 
-    /* 2. Dark Mode Overrides */
     body.dark-theme {
         --bg-color: #0b141d;
         --text-color: #e0e0e0;
         --section-bg: #16222e;
-        /* Swapping to Gold for Dark Mode */
         --accent-color: var(--ubc-gold); 
         --card-shadow: rgba(0,0,0,0.4);
     }
@@ -38,7 +35,6 @@
         transition: background 0.3s ease, color 0.3s ease;
     }
 
-    /* Hero Section - Stays Blue for Branding */
     header { 
         background: var(--ubc-blue);
         color: white; 
@@ -86,8 +82,11 @@
         margin-top: 15px;
     }
 
-    /* Content Layout */
-    .container { padding: 40px 20px; }
+    /* --- ENHANCED 3D SCROLL LOGIC --- */
+    .container { 
+        padding: 40px 20px; 
+        perspective: 2000px; /* Essential for 3D depth */
+    }
 
     section { 
         background: var(--section-bg); 
@@ -95,11 +94,27 @@
         border-radius: 15px; 
         box-shadow: 0 5px 20px var(--card-shadow); 
         margin-bottom: 30px; 
-        transition: transform 0.3s ease, background 0.3s ease;
+        
+        /* 1. Initial state (hidden and tilted) */
+        opacity: 0;
+        transform: rotateX(-90deg) translateZ(-100px);
+        transform-origin: top;
+        backface-visibility: hidden;
+        transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                    opacity 0.8s ease, 
+                    background 0.3s ease;
     }
-    section:hover { transform: translateY(-5px); }
 
-    /* Fix: All section titles (Featured Projects, Education, etc.) turn Gold */
+    /* 2. Active state (flipped down) */
+    section.reveal { 
+        opacity: 1;
+        transform: rotateX(0deg) translateZ(0);
+    }
+
+    section:hover { 
+        transform: translateY(-8px) translateZ(30px); 
+    }
+
     h2 { 
         color: var(--accent-color); 
         border-left: 5px solid var(--ubc-gold);
@@ -109,7 +124,6 @@
         transition: color 0.3s;
     }
 
-    /* Skills Grid */
     .skills-grid { 
         display: grid; 
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
@@ -132,14 +146,12 @@
         transition: 0.3s;
     }
 
-    /* Labels like 'Python' turn Gold in Dark Mode */
     body.dark-theme .tags li {
         background: #2c3e50;
         color: var(--ubc-gold);
         border-color: var(--ubc-gold);
     }
 
-    /* Tooltip Logic */
     .tags li::after {
         content: attr(data-tooltip);
         position: absolute;
@@ -159,7 +171,6 @@
     }
     .tags li:hover::after { opacity: 1; visibility: visible; }
 
-    /* Project Titles turn Gold in Dark Mode */
     .project-card {
         border-left: 3px solid #eee;
         padding-left: 20px;
@@ -180,10 +191,115 @@
         header h1 { font-size: 2rem; }
         .profile-img { width: 140px; height: 140px; }
     }
+	.flip-container {
+	  perspective: 1000px;
+	}
+
+	/* The element that actually rotates 180 degrees */
+	.flip-card-inner {
+	  position: relative;
+	  width: 100%;
+	  height: 100%;
+	  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+	  transform-style: preserve-3d;
+	}
+
+	/* The 'Back' and 'Forward' action */
+	.flip-container:hover .flip-card-inner {
+	  transform: rotateY(180deg); /* Flips it to the back */
+	}
+
+	/* Ensure the back of the card is hidden until flipped */
+	.flip-card-front, .flip-card-back {
+	  position: absolute;
+	  width: 100%;
+	  height: 100%;
+	  backface-visibility: hidden;
+	}
+
+	.flip-card-back {
+	  transform: rotateY(180deg); /* Pre-rotates the back side */
+	}
+		/* Sidebar - Hidden by default */
+	#sidebar {
+		position: fixed;
+		left: -250px; 
+		top: 0;
+		width: 250px;
+		height: 100%;
+		background: var(--ubc-blue);
+		color: white;
+		transition: 0.3s ease-in-out;
+		z-index: 1000;
+		padding-top: 80px;
+		box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+	}
+
+	#sidebar.active { left: 0; }
+
+	#sidebar ul { list-style: none; padding: 0; }
+	#sidebar ul li a {
+		display: block;
+		padding: 20px;
+		color: white;
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 1.1rem;
+	}
+
+	#sidebar ul li a:hover { background: var(--ubc-gold); color: var(--ubc-blue); }
+
+	/* Hamburger Button */
+	#menu-toggle {
+		position: fixed;
+		top: 20px;
+		left: 20px;
+		z-index: 1001;
+		background: var(--ubc-gold);
+		border: none;
+		padding: 10px;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+
+	.bar {
+		width: 25px;
+		height: 3px;
+		background-color: var(--ubc-blue);
+		margin: 4px 0;
+	}
 </style>
 </head>
 <body>
+	<body>
+    <button id="menu-toggle">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </button>
 
+    <nav id="sidebar">
+        <ul>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Featured Projects</a></li>
+            <li><a href="#simulations">Simulations</a></li>
+        </ul>
+    </nav>
+
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <h3>Navigation</h3>
+    </div>
+    <ul>
+        <li><a href="#education" onclick="toggleMenu()">Education</a></li>
+        <li><a href="#skills" onclick="toggleMenu()">Skills</a></li>
+        <li><a href="#projects" onclick="toggleMenu()">Featured Projects</a></li>
+        <li><a href="#simulations" onclick="toggleMenu()">Simulations</a></li>
+    </ul>
+</nav>
+
+<div id="overlay" onclick="toggleMenu()"></div>
     <header>
         <img src="profile.jpeg" alt="Deniz Dalbasi" class="profile-img">
         <h1>Deniz Dalbasi</h1>
@@ -255,7 +371,7 @@
                 <p>An automated sorting system using C++ and hardware prototyping.</p>
                 <span class="project-tech">Arduino | C++ | SolidWorks</span>
             </div>
-			
+            
             <div class="project-card">
                 <h3><a href="minecraft-predictor.html" target="_blank" rel="noopener noreferrer">Minecraft Predictor</a></h3>
                 <p>A seed analysis tool built with custom optimization algorithms.</p>
@@ -271,38 +387,37 @@
                 <p>Physics-based vertical platformer game with OOP architecture.</p>
                 <span class="project-tech">Java | OOP</span>
             </div>
-			<section id="simulations">
-				<h2>Interactive Simulations</h2>
-				
-				<div class="project-card">
-					<h3><a href="pathfinder.html" target="_blank" rel="noopener noreferrer">Pathfinding Visualizer</a></h3>
-					<p>An interactive solver implementing <strong>Dijkstra’s Algorithm</strong>. Designed to demonstrate graph traversal and cost-optimization in real-time grid environments.</p>
-					<ul class="tags">
-						<li data-tooltip="O(E + V log V) Complexity">Dijkstra's</li>
-						<li data-tooltip="Grid-based Graph Modeling">Data Structures</li>
-						<li data-tooltip="Asynchronous Event Loop">JavaScript</li>
-					</ul>
-				</div>
-
-				<div class="project-card">
-					<h3><a href="Visualizer.html" target="_blank" rel="noopener noreferrer">Sorting algortihms</a></h3>
-					<p>A benchmarking tool for <strong>sorting algorithm efficiency</strong>. Features real-time comparison/swap tracking and recursive visualization of Quick Sort and Merge Sort.</p>
-					<ul class="tags">
-						<li data-tooltip="Divide & Conquer Strategy">Merge Sort</li>
-						<li data-tooltip="Recursive Partitioning">Quick Sort</li>
-						<li data-tooltip="Big O Analysis">Algorithm Complexity</li>
-					</ul>
-				</div>
-				<div class="project-card">
-					<h3><a href="brick-breaker.html" target="_blank" rel="noopener noreferrer">Kinematic Collision Engine</a></h3>
-					<p>A real-time <strong>Brick Breaker</strong> simulation focusing on vector reflection and discrete collision detection between dynamic and static objects.</p>
-					<ul class="tags">
-						<li data-tooltip="Vector Reflection Physics">Kinematics</li>
-						<li data-tooltip="AABB Collision Logic">Collision Detection</li>
-						<li data-tooltip="High-Frequency Game Loop">JavaScript</li>
-					</ul>
-				</div>
 			</section>
+            
+            <section id="simulations" style="margin-top: 40px;">
+                <h2 style="color: var(--accent-color); border-left: 5px solid var(--ubc-gold); padding-left: 15px;">Interactive Simulations</h2>
+                
+                <div class="project-card">
+                    <h3><a href="pathfinder.html" target="_blank" rel="noopener noreferrer">Pathfinding Visualizer</a></h3>
+                    <p>An interactive solver implementing <strong>Dijkstra’s Algorithm</strong>.</p>
+                    <ul class="tags">
+                        <li data-tooltip="O(E + V log V) Complexity">Dijkstra's</li>
+                        <li data-tooltip="Grid-based Graph Modeling">Data Structures</li>
+                    </ul>
+                </div>
+
+                <div class="project-card">
+                    <h3><a href="Visualizer.html" target="_blank" rel="noopener noreferrer">Sorting algorithms</a></h3>
+                    <p>A benchmarking tool for <strong>sorting algorithm efficiency</strong>.</p>
+                    <ul class="tags">
+                        <li data-tooltip="Divide & Conquer Strategy">Merge Sort</li>
+                        <li data-tooltip="Recursive Partitioning">Quick Sort</li>
+                    </ul>
+                </div>
+                <div class="project-card">
+                    <h3><a href="brick-breaker.html" target="_blank" rel="noopener noreferrer">Kinematic Collision Engine</a></h3>
+                    <p>A real-time <strong>Brick Breaker</strong> simulation focusing on physics.</p>
+                    <ul class="tags">
+                        <li data-tooltip="Vector Reflection Physics">Kinematics</li>
+                        <li data-tooltip="AABB Collision Logic">Collision Detection</li>
+                    </ul>
+                </div>
+            </div>
         </section>
     </div>
 
@@ -311,6 +426,7 @@
     </footer>
 
     <script>
+        // --- 1. THEME TOGGLE SCRIPT ---
         const themeBtn = document.getElementById("theme-toggle");
         const body = document.body;
 
@@ -329,6 +445,41 @@
                 themeBtn.textContent = "🌙 Dark Mode";
             }
         });
+		const observerOptions = {
+			threshold: 0.15 
+		};
+
+		const revealObserver = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('reveal');
+				} else {
+					entry.target.classList.remove('reveal');
+				}
+			});
+		}, observerOptions);
+
+		document.querySelectorAll('section').forEach(section => {
+			revealObserver.observe(section);
+		});
+		function toggleMenu() {
+			const sidebar = document.getElementById('sidebar');
+			const overlay = document.getElementById('overlay');
+			sidebar.classList.toggle('active');
+			overlay.classList.toggle('active');
+		}
+
+		document.getElementById('menu-toggle').addEventListener('click', toggleMenu);
+
+		document.querySelectorAll('#sidebar a').forEach(anchor => {
+			anchor.addEventListener('click', function(e) {
+				e.preventDefault();
+				const targetId = this.getAttribute('href');
+				document.querySelector(targetId).scrollIntoView({
+					behavior: 'smooth'
+				});
+			});
+		});
     </script>
 </body>
 </html>
