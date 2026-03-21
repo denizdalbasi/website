@@ -132,7 +132,6 @@
     let paddleX = (canvas.width - paddleWidth) / 2;
     let rightPressed = false, leftPressed = false;
 
-    // Grid Settings
     const rows = 3, cols = 5, bW = 75, bH = 20, padding = 10, offT = 40, offL = 35;
 
     document.addEventListener("keydown", (e) => {
@@ -145,13 +144,14 @@
         if(e.key == "Left" || e.key == "ArrowLeft") leftPressed = false;
     });
 
+    // Initial System Load
     function initGame() {
         gameRunning = false;
         ballAttached = true;
         score = 0;
-        lives = 3;
+        lives = 3; // Resetting lives to 3
         paddleX = (canvas.width - paddleWidth) / 2;
-        dx = 2; dy = -2;
+        dx = 3; dy = -3; // Fixed velocity
         
         bricks = [];
         for(let c=0; c<cols; c++) {
@@ -161,12 +161,15 @@
         
         overlay.style.display = "flex";
         msgTitle.innerText = "SYSTEM READY";
-        msgBody.innerText = "Press Space or Click to Launch";
+        msgBody.innerText = "3 Lives Remaining | Press Space to Launch";
         document.getElementById("state-ui").innerText = "WAITING";
     }
 
     function startGame() {
-        if(gameRunning) return;
+        // If the game ended in a win or loss, reset the whole board first
+        if (lives <= 0 || score == rows * cols) {
+            initGame();
+        }
         gameRunning = true;
         ballAttached = false;
         overlay.style.display = "none";
@@ -176,7 +179,7 @@
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // 1. Draw Bricks
+        // 1. Render Simulation Nodes (Bricks)
         for(let c=0; c<cols; c++) {
             for(let r=0; r<rows; r++) {
                 if(bricks[c][r].status == 1) {
@@ -185,64 +188,69 @@
                     bricks[c][r].x = bX; bricks[c][r].y = bY;
                     ctx.fillStyle = "#2c3e50";
                     ctx.fillRect(bX, bY, bW, bH);
-                    ctx.strokeStyle = "#ffb703"; // Gold border for bricks
+                    ctx.strokeStyle = "#ffb703"; 
                     ctx.strokeRect(bX, bY, bW, bH);
                     
-                    // Collision
+                    // Collision Logic
                     if(gameRunning && x > bX && x < bX+bW && y > bY && y < bY+bH) {
                         dy = -dy; bricks[c][r].status = 0; score++;
                         if(score == rows * cols) {
                             gameRunning = false;
                             overlay.style.display = "flex";
                             msgTitle.innerText = "VICTORY";
-                            msgBody.innerText = "All data nodes cleared.";
+                            msgBody.innerText = "All data nodes cleared. Click to Reset.";
                         }
                     }
                 }
             }
         }
 
-        // 2. Paddle Movement
+        // 2. Control Surface (Paddle)
         if(rightPressed && paddleX < canvas.width-paddleWidth) paddleX += 7;
         if(leftPressed && paddleX > 0) paddleX -= 7;
         ctx.fillStyle = "white";
         ctx.fillRect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
 
-        // 3. Ball Logic
+        // 3. Kinetic Logic (Ball)
         if(ballAttached) {
             x = paddleX + paddleWidth / 2;
             y = canvas.height - paddleHeight - ballRadius;
         } else if (gameRunning) {
+            // Wall Bounces
             if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) dx = -dx;
             if(y + dy < ballRadius) dy = -dy;
+            
+            // Paddle & Floor Logic
             else if(y + dy > canvas.height-ballRadius-paddleHeight) {
                 if(x > paddleX && x < paddleX + paddleWidth) {
-                    if(dy > 0) dy = -dy;
+                    if(dy > 0) dy = -dy; // Bounce off paddle
                 } else if(y + dy > canvas.height-ballRadius) {
+                    // LIFE LOST LOGIC
                     lives--;
+                    gameRunning = false; // Halt simulation
+                    overlay.style.display = "flex";
+
                     if(lives <= 0) {
-                        gameRunning = false;
-                        overlay.style.display = "flex";
                         msgTitle.innerText = "SYSTEM CRASH";
-                        msgBody.innerText = "Projectile Lost.";
+                        msgBody.innerText = "Critical Failure. Final Score: " + score;
+                        document.getElementById("state-ui").innerText = "TERMINATED";
                     } else {
                         ballAttached = true;
-                        gameRunning = false;
-                        overlay.style.display = "flex";
                         msgTitle.innerText = "LIFE LOST";
-                        msgBody.innerText = "Press Space to try again";
+                        msgBody.innerText = lives + " Lives Remaining. Press Space.";
+                        document.getElementById("state-ui").innerText = "INTERRUPTED";
                     }
                 }
             }
             x += dx; y += dy;
         }
 
-        // 4. Draw Ball
+        // 4. Draw Projectile
         ctx.beginPath(); ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-        ctx.fillStyle = "#ffb703"; // Gold Ball
+        ctx.fillStyle = "#ffb703";
         ctx.fill(); ctx.closePath();
 
-        // 5. Update UI
+        // 5. Update Telemetry UI
         document.getElementById("pos-ui").innerText = `${Math.round(x)},${Math.round(y)}`;
         document.getElementById("score-ui").innerText = score;
         document.getElementById("lives-ui").innerText = lives;
