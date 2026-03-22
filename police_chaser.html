@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vector Pursuit | Engineering Demo</title>
+    <style>
+        body { 
+            background: #011627; color: #ffb703; font-family: 'Segoe UI', sans-serif; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            height: 100vh; margin: 0; overflow: hidden; 
+        }
+        #game-container { position: relative; }
+        canvas { 
+            background: #010e1b; border: 4px solid #5f7e97; border-radius: 10px; 
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.1); 
+        }
+        .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(1, 22, 39, 0.95); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; border-radius: 10px; z-index: 10;
+        }
+        .ui-panel { position: absolute; top: 20px; width: 100%; text-align: center; pointer-events: none; }
+        button {
+            padding: 15px 40px; font-size: 1.5rem; background: #00ffcc; border: none;
+            border-radius: 5px; color: #011627; cursor: pointer; font-weight: bold;
+            transition: 0.2s; box-shadow: 0 0 15px #00ffcc;
+        }
+        button:hover { transform: scale(1.1); background: #fff; }
+        #game-over-screen { display: none; }
+        .stats { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div class="ui-panel">
+        <div class="stats">POLICE: <span id="count">0</span> | LIVES: <span id="lives">3</span></div>
+    </div>
+
+    <div id="start-screen" class="overlay">
+        <h1>POLICE CHASER</h1>
+        <p>Outrun the police. Make them collide.</p>
+        <button onclick="startGame()">START PURSUIT</button>
+    </div>
+
+    <div id="game-over-screen" class="overlay">
+        <h1 style="color: #ff4d4d;">WASTED</h1>
+        <p>THE PURSUIT HAS ENDED.</p>
+        <button onclick="resetGame()">RESTART MISSION</button>
+    </div>
+
+    <canvas id="chaseCanvas" width="800" height="600"></canvas>
+</div>
+
+<script>
+    const canvas = document.getElementById('chaseCanvas');
+    const ctx = canvas.getContext('2d');
+    const countDisplay = document.getElementById('count');
+    const livesDisplay = document.getElementById('lives');
+    
+    let gameActive = false;
+    let player, enemies, lives, invulnerable, keys = {};
+    let spawnRate = 5000; 
+    let lastSpawnTime = 0;
+
+    function initVariables() {
+        // Engineering Note: Adjusted speeds for better playability
+        player = { x: 400, y: 300, angle: 0, speed: 0, maxSpeed: 3.5, accel: 0.15 };
+        enemies = [{ x: 100, y: 100, speed: 1.6 }];
+        lives = 3;
+        invulnerable = 0;
+        spawnRate = 4000; 
+        livesDisplay.innerText = lives;
+        countDisplay.innerText = enemies.length;
+    }
+
+    function startGame() {
+        initVariables();
+        document.getElementById('start-screen').style.display = 'none';
+        gameActive = true;
+    }
+
+    function resetGame() {
+        initVariables();
+        document.getElementById('game-over-screen').style.display = 'none';
+        gameActive = true;
+    }
+
+    window.addEventListener('keydown', e => keys[e.code] = true);
+    window.addEventListener('keyup', e => keys[e.code] = false);
+
+    function update(time) {
+        if (!gameActive) return;
+
+        // 1. Spawning
+        if (time - lastSpawnTime > spawnRate && enemies.length < 20) { 
+            enemies.push({ 
+                x: Math.random() > 0.5 ? -30 : canvas.width + 30, 
+                y: Math.random() * canvas.height, 
+                speed: 1.2 + Math.random() * 1.0 
+            });
+            spawnRate = Math.max(1000, spawnRate - 300); 
+            lastSpawnTime = time;
+            countDisplay.innerText = enemies.length;
+			countDisplay.innerText = enemies.length;
+        }
+
+        // 2. Player Movement
+        if (keys['ArrowLeft']) player.angle -= 0.07;
+        if (keys['ArrowRight']) player.angle += 0.07;
+        if (keys['ArrowUp']) player.speed = Math.min(player.speed + player.accel, player.maxSpeed);
+        else player.speed *= 0.97;
+
+        player.x += Math.cos(player.angle) * player.speed;
+        player.y += Math.sin(player.angle) * player.speed;
+
+        if (player.x > canvas.width) player.x = 0; if (player.x < 0) player.x = canvas.width;
+        if (player.y > canvas.height) player.y = 0; if (player.y < 0) player.y = canvas.height;
+
+        // 3. AI and Collisions
+        for (let i = enemies.length - 1; i >= 0; i--) {
+            let e = enemies[i];
+            let angleToPlayer = Math.atan2(player.y - e.y, player.x - e.x);
+            e.x += Math.cos(angleToPlayer) * e.speed;
+            e.y += Math.sin(angleToPlayer) * e.speed;
+
+            // Hit Player check
+            if (Math.hypot(e.x - player.x, e.y - player.y) < 20 && invulnerable <= 0) {
+                lives--;
+                invulnerable = 90;
+                livesDisplay.innerText = lives;
+                if (lives <= 0) {
+                    gameActive = false;
+                    document.getElementById('game-over-screen').style.display = 'flex';
+                }
+            }
+
+            // Cop Crash check
+            for (let j = i - 1; j >= 0; j--) {
+                if (Math.hypot(e.x - enemies[j].x, e.y - enemies[j].y) < 18) {
+                    enemies.splice(i, 1);
+                    enemies.splice(j, 1);
+                    countDisplay.innerText = enemies.length;
+                    break; 
+                }
+            }
+        }
+        if (invulnerable > 0) invulnerable--;
+    }
+
+    function draw(time) {
+        if (gameActive) {
+            ctx.fillStyle = "rgba(1, 14, 27, 0.25)"; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Player
+            if (invulnerable % 10 < 5) {
+                ctx.save();
+                ctx.translate(player.x, player.y);
+                ctx.rotate(player.angle);
+                ctx.fillStyle = "#00ffcc";
+                ctx.fillRect(-15, -10, 30, 20);
+                ctx.restore();
+            }
+
+            // Draw Enemies
+            enemies.forEach(e => {
+			// 1. Draw the Car Body (Red)
+			ctx.fillStyle = "#ff4d4d";
+			ctx.beginPath();
+			ctx.arc(e.x, e.y, 10, 0, Math.PI * 2);
+			ctx.fill();
+
+			// 2. Add the Flashing Police Light (Alternates every 200ms)
+			// We use the remainder (%) of time to switch between blue and red
+			ctx.fillStyle = (Date.now() % 400 > 200) ? "#0055ff" : "#ff0000";
+			
+			// Draw a small rectangular light bar on top of the circle
+			ctx.fillRect(e.x - 6, e.y - 14, 12, 4); 
+			
+			// Optional: Add a small white "glare" to the light
+			ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+			ctx.fillRect(e.x - 2, e.y - 14, 4, 4);
+		});
+        } else {
+            // Clean the background when game is not active
+            ctx.fillStyle = "#010e1b";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        update(time);
+        requestAnimationFrame(draw);
+    }
+
+    initVariables();
+    requestAnimationFrame(draw);
+</script>
+</body>
+</html>
