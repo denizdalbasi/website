@@ -71,16 +71,19 @@
     .contact-links a:hover { background: var(--ubc-gold); color: var(--ubc-blue); }
 
     #theme-toggle {
-        background: none;
-        border: 1px solid var(--ubc-gold);
-        color: var(--ubc-gold);
-        padding: 8px 20px;
-        border-radius: 20px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: 0.3s;
-        margin-top: 15px;
-    }
+	    position: fixed;
+	    top: 20px;
+	    right: 20px;
+	    z-index: 1002;
+	    background: var(--ubc-blue);
+	    border: 1px solid var(--ubc-gold);
+	    color: var(--ubc-gold);
+	    padding: 8px 16px;
+	    border-radius: 20px;
+	    cursor: pointer;
+	    font-weight: bold;
+	    transition: 0.3s;
+	}
 
     /* --- ENHANCED 3D SCROLL LOGIC --- */
     .container { 
@@ -276,6 +279,7 @@
         <div class="bar"></div>
         <div class="bar"></div>
         <div class="bar"></div>
+		<button id="theme-toggle">Switch Theme</button>
     </button>
 
     <nav id="sidebar">
@@ -304,14 +308,13 @@
         <img src="profile.jpeg" alt="Deniz Dalbasi" class="profile-img">
         <h1>Deniz Dalbasi</h1>
         <p>First Year Engineering @ UBC | Intended Computer Engineering</p>
-		<p style="max-width: 600px; margin: 10px auto; opacity: 0.85; font-size: 1rem; line-height: 1.6;">
-			Five languages, many programming languages, and a lot of ongoing side projects. I'm a first-year at UBC working toward Computer Engineering, interested in embedded systems, machine learning, and anything that bridges code with the real world.
+		<p style="max-width: 480px; margin: 25px auto 0 auto; opacity: 0.85; font-size: 1rem; line-height: 1.6;">
+			Five languages, many programming languages, and a lot of ongoing side projects. First-year at UBC headed toward Computer Engineering; embedded systems, machine learning, and where code meets hardware.
 		</p>
         <div class="contact-links">
             <a href="https://linkedin.com/in/deniz-dalbasi" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             <a href="https://github.com/denizdalbasi" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
-        <button id="theme-toggle">🌙 Switch Theme</button>
     </header>
 
     <div class="container">
@@ -479,17 +482,17 @@
 
         if (localStorage.getItem("portfolio-theme") === "dark") {
             body.classList.add("dark-theme");
-            themeBtn.textContent = "☀️ Light Mode";
+            themeBtn.textContent = "Light Mode";
         }
 
         themeBtn.addEventListener("click", () => {
             body.classList.toggle("dark-theme");
             if (body.classList.contains("dark-theme")) {
                 localStorage.setItem("portfolio-theme", "dark");
-                themeBtn.textContent = "☀️ Light Mode";
+                themeBtn.textContent = "Light Mode";
             } else {
                 localStorage.setItem("portfolio-theme", "light");
-                themeBtn.textContent = "🌙 Dark Mode";
+                themeBtn.textContent = "Dark Mode";
             }
         });
 		const observerOptions = {
