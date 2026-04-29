@@ -269,110 +269,10 @@
 		background-color: var(--ubc-blue);
 		margin: 4px 0;
 	}
-	/* SPLASH SCREEN OVERLAY LOGIC */
-	#splash-overlay {
-	    position: fixed;
-	    top: 0;
-	    left: 0;
-	    width: 100%;
-	    height: 100%;
-	    background-color: #0b0f1a;
-	    display: flex;
-	    flex-direction: column;
-	    align-items: center;
-	    justify-content: center;
-	    z-index: 9999; /* Higher than your sidebar and menu-toggle */
-	    transition: opacity 0.8s ease, visibility 0.8s;
-	}
-	
-	.welcome-header {
-	    font-size: 64px;
-	    font-weight: 900;
-	    letter-spacing: -2px;
-	    margin-bottom: 10px;
-	    text-transform: uppercase;
-	    background: linear-gradient(to bottom, #fff 40%, #666);
-	    -webkit-background-clip: text;
-	    -webkit-text-fill-color: transparent;
-	    opacity: 0;
-	    transform: translateY(20px);
-	    animation: slideUpSplash 0.6s forwards;
-	}
-	
-	.sub-header-splash {
-	    font-size: 14px;
-	    letter-spacing: 4px;
-	    color: #38bdf8;
-	    margin-bottom: 40px;
-	    opacity: 0;
-	    animation: fadeInSplash 1s forwards 0.3s;
-	}
-	
-	.splash-container {
-	    align-items: center;
-	    background: #000;
-	    border-radius: 40px;
-	    border: 1px solid rgba(255, 255, 255, 0.1);
-	    display: flex;
-	    height: 70px;
-	    justify-content: center;
-	    position: relative;
-	    width: 200px;
-	    overflow: hidden;
-	}
-	
-	.splash-text { color: white; position: absolute; font-size: 16px; font-weight: 600; letter-spacing: 2px; }
-	.fingerprint-splash { left: 50%; opacity: 0; position: absolute; stroke: #334155; top: 50%; transform: translate(-50%, -50%); }
-	.fingerprint-active-splash { stroke: #38bdf8; }
-	.odd-s { stroke-dasharray: 50px 50px; stroke-dashoffset: 50px; }
-	.even-s { stroke-dasharray: 50px 50px; stroke-dashoffset: -50px; }
-	.ok-s { opacity: 0; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
-	
-	.active.splash-container { animation: 2.2s ContainerSplash ease-in-out; }
-	.active .splash-text { opacity: 0; transition: 0.2s; }
-	.active .fingerprint-splash { opacity: 1; transition: 0.2s; }
-	.active .fingerprint-active-splash .odd-s, 
-	.active .fingerprint-active-splash .even-s { stroke-dashoffset: 0; transition: 0.8s ease-in-out 0.4s; }
-	.active .ok-s { animation: 2.2s OkSplash forwards; }
-	
-	@keyframes slideUpSplash { to { opacity: 1; transform: translateY(0); } }
-	@keyframes fadeInSplash { to { opacity: 0.5; } }
-	@keyframes ContainerSplash { 
-	    0% { width: 200px } 15% { width: 70px } 80% { width: 70px; transform: scale(1); } 
-	    85% { transform: scale(1.1); } 100% { width: 200px; } 
-	}
-	@keyframes OkSplash { 
-	    0%, 75% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); } 
-	    80%, 90% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; } 
-	}
 </style>
 </head>
 <body>
-		<div id="splash-overlay">
-	    <div class="welcome-header">Welcome</div>
-		<div style="color: white; font-size: 24px; margin-top: -15px; margin-bottom: 30px; font-weight: 300; opacity: 0.9;">
-			To my Portfolio Website
-		</div>
-	    <div class="sub-header-splash">SECURE ACCESS GRANTED</div>
 	
-	    <div class="splash-container" id="splashBtn">
-	        <span class="splash-text">WELCOME</span>
-	        <svg class="fingerprint-splash fingerprint-active-splash" width="50" height="50" viewBox="0 0 100 100">
-	            <g fill="none" stroke-width="4" stroke-linecap="round">
-	                <path class="odd-s" d="m 25 57 c 0 0 -2 -7 -0.5 -13 c 1 -5 4 -9 4 -9" />
-	                <path class="even-s" d="m 32 31 c 0 0 2 -3 9 -5 c 7 -2 12 -0.5 12 -0.5" />
-	                <path class="odd-s" d="m 57 27 c 0 0 5 2 10 7 c 5 6 5 12 5 12" />
-	                <path class="even-s" d="m 34 68 c 0 0 2 -4 3 -9" />
-	                <path class="odd-s" d="m 45 33 c 0 0 12 -2 17 10 c 4 12 1 24 1 24" />
-	            </g>
-	        </svg>
-	        <svg class="ok-s" width="35" height="35" viewBox="0 0 100 100">
-	            <path d="M30 50l15 15l35 -35" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-	        </svg>
-	    </div>
-	    <div id="status" style="margin-top: 20px; font-size: 12px; color: #444; letter-spacing: 1px;">INITIALIZING SECURE SESSION...</div>
-	</div>
-	<body>
 		
     <button id="menu-toggle">
         <div class="bar"></div>
@@ -641,27 +541,6 @@
 				archive.style.display = "none";
 				viewMoreBtn.textContent = "+ View More Simulations";
 			}
-		});
-				// --- SPLASH SCREEN LOGIC ---
-		const splashOverlay = document.getElementById('splash-overlay');
-		const splashBtn = document.getElementById('splashBtn');
-		
-		// Trigger the animation shortly after load
-		setTimeout(() => {
-		    splashBtn.classList.add('active');
-		}, 400);
-		
-		// Detect when animation ends to reveal the site
-		splashBtn.addEventListener('animationend', (e) => {
-		    if (e.animationName === 'ContainerSplash') {
-		        splashOverlay.style.opacity = '0';
-		        splashOverlay.style.visibility = 'hidden';
-		        
-		        // Remove the element after fade out to keep the DOM clean
-		        setTimeout(() => {
-		            splashOverlay.remove();
-		        }, 800);
-		    }
 		});
     </script>
 </body>
