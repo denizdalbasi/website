@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinematic Collision Engine | UBC Portfolio</title>
+    <style>
+        :root {
+            --bg-dark: #0b141d;
+            --panel-dark: #070d14;
+            --gold: #ffb703;
+            --text-gray: #888;
+            --border: #333;
+        }
+
+        body { 
+            background-color: var(--bg-dark); 
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            margin: 0; padding: 20px;
+        }
+
+        .main-wrapper {
+            display: grid;
+            grid-template-columns: 480px 1fr;
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .toolbar {
+            grid-column: 1 / span 2;
+            border: 1px solid var(--gold);
+            padding: 15px;
+            display: flex;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+
+        .viewport { position: relative; width: 480px; height: 320px; }
+
+        canvas { border: 1px solid var(--gold); background: #000; }
+
+        /* Game Over / Start Overlay */
+        #overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--gold);
+            z-index: 10;
+        }
+
+        #overlay h2 { color: var(--gold); margin: 0; font-family: monospace; }
+        #overlay p { color: var(--text-gray); margin: 10px 0 20px 0; }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: monospace;
+            text-transform: uppercase;
+        }
+        button:hover { background: var(--gold); color: black; }
+
+        .sidebar {
+            background: var(--panel-dark);
+            border: 1px solid var(--border);
+            padding: 20px;
+        }
+        .sidebar h3 { color: var(--gold); margin-top: 0; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .sidebar li { color: var(--text-gray); margin-bottom: 15px; font-size: 0.9rem; }
+
+        .status-bar {
+            grid-column: 1 / span 2;
+            font-family: monospace; font-size: 0.75rem; color: var(--text-gray);
+            border-top: 1px solid var(--border); padding-top: 10px;
+        }
+        .highlight { color: var(--gold); }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <div class="toolbar">
+        <button onclick="initGame()">Reset System</button>
+        <div style="align-self: center; font-size: 0.8rem; color: var(--text-gray);">
+            STATUS: <span id="state-ui" class="highlight">INITIALIZING</span>
+        </div>
+    </div>
+
+    <div class="viewport">
+        <canvas id="myCanvas" width="480" height="320"></canvas>
+        <div id="overlay">
+            <h2 id="msg-title">SYSTEM READY</h2>
+            <p id="msg-body">Press Space or Click to Launch</p>
+            <button onclick="startGame()">Start Simulation</button>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <h3>Simulation Rules</h3>
+        <ul>
+            <li><strong>Initialization:</strong> The projectile is locked to the platform. Press <span class="highlight">SPACE</span> to begin playing.</li>
+            <li><strong>Controls:</strong> Use <span class="highlight">Left/Right Arrows</span> to move the platform position.</li>
+            <li><strong>Failure:</strong>If ball misses the platform</li>
+        </ul>
+    </div>
+
+    <div class="status-bar">
+        [LOG] Projectile: (<span id="pos-ui" class="highlight">0,0</span>) | Score: <span id="score-ui" class="highlight">0</span> | Lives: <span id="lives-ui" class="highlight">3</span>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
+    const overlay = document.getElementById("overlay");
+    const msgTitle = document.getElementById("msg-title");
+    const msgBody = document.getElementById("msg-body");
+
+    let x, y, dx, dy, score, bricks, lives;
+    let gameRunning = false;
+    let ballAttached = true;
+    
+    const ballRadius = 8, paddleHeight = 10, paddleWidth = 80;
+    let paddleX = (canvas.width - paddleWidth) / 2;
+    let rightPressed = false, leftPressed = false;
+
+    const rows = 3, cols = 5, bW = 75, bH = 20, padding = 10, offT = 40, offL = 35;
+
+    document.addEventListener("keydown", (e) => {
+        if(e.key == "Right" || e.key == "ArrowRight") rightPressed = true;
+        if(e.key == "Left" || e.key == "ArrowLeft") leftPressed = true;
+        if(e.code == "Space" && !gameRunning) startGame();
+    });
+    document.addEventListener("keyup", (e) => {
+        if(e.key == "Right" || e.key == "ArrowRight") rightPressed = false;
+        if(e.key == "Left" || e.key == "ArrowLeft") leftPressed = false;
+    });
+
+    // Initial System Load
+    function initGame() {
+        gameRunning = false;
+        ballAttached = true;
+        score = 0;
+        lives = 3; // Resetting lives to 3
+        paddleX = (canvas.width - paddleWidth) / 2;
+        dx = 3; dy = -3; // Fixed velocity
+        
+        bricks = [];
+        for(let c=0; c<cols; c++) {
+            bricks[c] = [];
+            for(let r=0; r<rows; r++) bricks[c][r] = { x: 0, y: 0, status: 1 };
+        }
+        
+        overlay.style.display = "flex";
+        msgTitle.innerText = "SYSTEM READY";
+        msgBody.innerText = "3 Lives Remaining | Press Space to Launch";
+        document.getElementById("state-ui").innerText = "WAITING";
+    }
+
+    function startGame() {
+        // If the game ended in a win or loss, reset the whole board first
+        if (lives <= 0 || score == rows * cols) {
+            initGame();
+        }
+        gameRunning = true;
+        ballAttached = false;
+        overlay.style.display = "none";
+        document.getElementById("state-ui").innerText = "RUNNING";
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // 1. Render Simulation Nodes (Bricks)
+        for(let c=0; c<cols; c++) {
+            for(let r=0; r<rows; r++) {
+                if(bricks[c][r].status == 1) {
+                    let bX = (c*(bW+padding)) + offL;
+                    let bY = (r*(bH+padding)) + offT;
+                    bricks[c][r].x = bX; bricks[c][r].y = bY;
+                    ctx.fillStyle = "#2c3e50";
+                    ctx.fillRect(bX, bY, bW, bH);
+                    ctx.strokeStyle = "#ffb703"; 
+                    ctx.strokeRect(bX, bY, bW, bH);
+                    
+                    // Collision Logic
+                    if(gameRunning && x > bX && x < bX+bW && y > bY && y < bY+bH) {
+                        dy = -dy; bricks[c][r].status = 0; score++;
+                        if(score == rows * cols) {
+                            gameRunning = false;
+                            overlay.style.display = "flex";
+                            msgTitle.innerText = "VICTORY";
+                            msgBody.innerText = "All data nodes cleared. Click to Reset.";
+                        }
+                    }
+                }
+            }
+        }
+
+        // 2. Control Surface (Paddle)
+        if(rightPressed && paddleX < canvas.width-paddleWidth) paddleX += 7;
+        if(leftPressed && paddleX > 0) paddleX -= 7;
+        ctx.fillStyle = "white";
+        ctx.fillRect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+
+        // 3. Kinetic Logic (Ball)
+        if(ballAttached) {
+            x = paddleX + paddleWidth / 2;
+            y = canvas.height - paddleHeight - ballRadius;
+        } else if (gameRunning) {
+            // Wall Bounces
+            if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) dx = -dx;
+            if(y + dy < ballRadius) dy = -dy;
+            
+            // Paddle & Floor Logic
+            else if(y + dy > canvas.height-ballRadius-paddleHeight) {
+                if(x > paddleX && x < paddleX + paddleWidth) {
+                    if(dy > 0) dy = -dy; // Bounce off paddle
+                } else if(y + dy > canvas.height-ballRadius) {
+                    // LIFE LOST LOGIC
+                    lives--;
+                    gameRunning = false; // Halt simulation
+                    overlay.style.display = "flex";
+
+                    if(lives <= 0) {
+                        msgTitle.innerText = "SYSTEM CRASH";
+                        msgBody.innerText = "Critical Failure. Final Score: " + score;
+                        document.getElementById("state-ui").innerText = "TERMINATED";
+                    } else {
+                        ballAttached = true;
+                        msgTitle.innerText = "LIFE LOST";
+                        msgBody.innerText = lives + " Lives Remaining. Press Space.";
+                        document.getElementById("state-ui").innerText = "INTERRUPTED";
+                    }
+                }
+            }
+            x += dx; y += dy;
+        }
+
+        // 4. Draw Projectile
+        ctx.beginPath(); ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+        ctx.fillStyle = "#ffb703";
+        ctx.fill(); ctx.closePath();
+
+        // 5. Update Telemetry UI
+        document.getElementById("pos-ui").innerText = `${Math.round(x)},${Math.round(y)}`;
+        document.getElementById("score-ui").innerText = score;
+        document.getElementById("lives-ui").innerText = lives;
+
+        requestAnimationFrame(draw);
+    }
+
+    initGame();
+    draw();
+</script>
+</body>
+</html>
