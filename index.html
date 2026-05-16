@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deniz Dalbasi | Portfolio</title>
+	<meta name="description" content="Engineering student at UBC focused on the intersection of embedded systems, AI, and low-level hardware design. Check out my projects.">
+    
+	<meta property="og:type" content="website">
+    <meta property="og:url" content="https://denizdalbasi.github.io/website/">
+    <meta property="og:title" content="Deniz Dalbasi | Portfolio Website">
+    <meta property="og:description" content="Intended Computer Engineering student at UBC interested in how embedded systems and AI come together in real-world devices.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/denizdalbasi/website/main/profile.jpeg">
+	
+	
+	<style>
+    /* 1. Theme Variables */
+    :root {
+        --ubc-blue: #002145;
+        --ubc-gold: #ffb703;
+        --bg-color: #f4f7f9;
+        --text-color: #333;
+        --section-bg: #ffffff;
+        --accent-color: var(--ubc-blue); 
+        --card-shadow: rgba(0,0,0,0.05);
+    }
+
+    body.dark-theme {
+        --bg-color: #0b141d;
+        --text-color: #e0e0e0;
+        --section-bg: #16222e;
+        --accent-color: var(--ubc-gold); 
+        --card-shadow: rgba(0,0,0,0.4);
+    }
+
+    body { 
+        font-family: 'Segoe UI', system-ui, sans-serif; 
+        line-height: 1.6; 
+        color: var(--text-color); 
+        max-width: 1000px; 
+        margin: 0 auto; 
+        padding: 0; 
+        background-color: var(--bg-color); 
+        transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    header { 
+        background: var(--ubc-blue);
+        color: white; 
+        padding: 60px 20px; 
+        text-align: center; 
+        border-bottom: 5px solid var(--ubc-gold);
+    }
+
+    .profile-img {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        border: 5px solid white;
+        object-fit: cover;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    header h1 { margin: 10px 0; font-size: 2.8rem; color: white; }
+    header p { font-size: 1.2rem; opacity: 0.9; margin: 5px 0; color: white; }
+    
+    .contact-links { margin: 20px 0; }
+    .contact-links a { 
+		display: inline-block;
+		color: var(--ubc-gold); 
+		text-decoration: none; 
+		margin: 10px 15px; 
+		padding: 12px 25px;
+		font-weight: 600;
+		border: 2px solid var(--ubc-gold);
+		border-radius: 8px;
+		transition: 0.3s;
+		background: var(--ubc-blue);  /* ADD THIS LINE */
+	}
+    .contact-links a:hover { background: var(--ubc-gold); color: var(--ubc-blue); }
+
+    #theme-toggle {
+	    position: fixed;
+	    top: 20px;
+	    right: 20px;
+	    z-index: 1002;
+	    background: var(--ubc-blue);
+	    border: 1px solid var(--ubc-gold);
+	    color: var(--ubc-gold);
+	    padding: 8px 16px;
+	    border-radius: 20px;
+	    cursor: pointer;
+	    font-weight: bold;
+	    transition: 0.3s;
+	}
+
+    /* --- ENHANCED 3D SCROLL LOGIC --- */
+    .container { 
+        padding: 40px 20px; 
+        perspective: 2000px; /* Essential for 3D depth */
+    }
+
+    section { 
+        background: var(--section-bg); 
+        padding: 30px; 
+        border-radius: 15px; 
+        box-shadow: 0 5px 20px var(--card-shadow); 
+        margin-bottom: 30px; 
+        
+        /* 1. Initial state (hidden and tilted) */
+        opacity: 0;
+        transform: rotateX(-90deg) translateZ(-100px);
+        transform-origin: top;
+        backface-visibility: hidden;
+        transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                    opacity 0.8s ease, 
+                    background 0.3s ease;
+    }
+
+    /* 2. Active state (flipped down) */
+    section.reveal { 
+        opacity: 1;
+        transform: rotateX(0deg) translateZ(0);
+    }
+
+    section.reveal:hover {
+		transform: translateY(-8px) translateZ(30px);
+	}
+
+    h2 { 
+        color: var(--accent-color); 
+        border-left: 5px solid var(--ubc-gold);
+        padding-left: 15px;
+        margin-top: 0;
+        font-size: 1.5rem;
+        transition: color 0.3s;
+    }
+
+    .skills-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+        gap: 20px; 
+    }
+    .skill-category h4 { margin-bottom: 10px; color: #777; }
+    
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
+    
+    .tags li {
+        background: #eef2f7;
+        color: #333;
+        padding: 6px 12px; 
+        border-radius: 6px; 
+        font-size: 0.85rem; 
+        font-weight: 600;
+        border: 1px solid #d1d9e6;
+        position: relative;
+        cursor: help;
+        transition: 0.3s;
+    }
+
+    body.dark-theme .tags li {
+        background: #2c3e50;
+        color: var(--ubc-gold);
+        border-color: var(--ubc-gold);
+    }
+
+    .tags li::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.2s;
+        z-index: 100;
+    }
+    .tags li:hover::after { opacity: 1; visibility: visible; }
+
+    .project-card {
+        border-left: 3px solid #eee;
+        padding-left: 20px;
+        margin-bottom: 30px;
+    }
+    .project-card h3 a { 
+        color: var(--accent-color);
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        transition: color 0.3s;
+    }
+    .project-card h3 a:hover { color: var(--ubc-gold); }
+    .project-tech { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+
+    footer { text-align: center; padding: 40px; color: #999; font-size: 0.9rem; }
+
+    @media (max-width: 600px) {
+        header h1 { font-size: 2rem; }
+        .profile-img { width: 140px; height: 140px; }
+    }
+
+	/* The element that actually rotates 180 degrees */
+	.flip-card-inner {
+	  position: relative;
+	  width: 100%;
+	  height: 100%;
+	  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+	  transform-style: preserve-3d;
+	}
+
+	/* Sidebar - Hidden by default */
+	#sidebar {
+		position: fixed;
+		left: -250px; 
+		top: 0;
+		width: 250px;
+		height: 100%;
+		background: var(--ubc-blue);
+		color: white;
+		transition: 0.3s ease-in-out;
+		z-index: 1000;
+		padding-top: 80px;
+		box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+	}
+
+	#sidebar.active { left: 0; }
+
+	#sidebar ul { list-style: none; padding: 0; }
+	#sidebar ul li a {
+		display: block;
+		padding: 20px;
+		color: white;
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 1.1rem;
+	}
+
+	#sidebar ul li a:hover { background: var(--ubc-gold); color: var(--ubc-blue); }
+	#menu-toggle {
+		position: fixed;
+		top: 20px;
+		left: 20px;
+		z-index: 1001;
+		background: var(--ubc-gold);
+		border: none;
+		padding: 10px;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+
+	.bar {
+		width: 25px;
+		height: 3px;
+		background-color: var(--ubc-blue);
+		margin: 4px 0;
+	}
+	
+	/* Timeline Styling */
+	.timeline {
+		position: relative;
+		padding: 20px 0;
+	}
+
+	.timeline::before {
+		content: '';
+		position: absolute;
+		left: 31px;
+		top: 0;
+		bottom: 0;
+		width: 2px;
+		background: var(--ubc-gold);
+	}
+
+	.timeline-item {
+		position: relative;
+		margin-bottom: 30px;
+		padding-left: 70px;
+	}
+
+	.timeline-item::before {
+		content: '';
+		position: absolute;
+		left: 25px;
+		top: 5px;
+		width: 14px;
+		height: 14px;
+		border-radius: 50%;
+		background: var(--ubc-blue);
+		border: 2px solid var(--ubc-gold);
+		z-index: 1;
+	}
+
+	body.dark-theme .timeline-item::before {
+		background: var(--ubc-gold);
+	}
+
+	.timeline-date {
+		font-family: 'Courier New', monospace;
+		font-weight: bold;
+		font-size: 0.9rem;
+		color: var(--ubc-blue);
+		margin-bottom: 5px;
+	}
+
+	body.dark-theme .timeline-date {
+		color: var(--ubc-gold);
+	}
+
+	.timeline-content h4 {
+		margin: 0;
+		color: var(--text-color);
+		font-size: 1.1rem;
+	}
+
+	.timeline-content p {
+		margin: 5px 0 0;
+		font-size: 0.95rem;
+		opacity: 0.8;
+	}
+    /* Styling for the tech labels under each project */
+    .project-tech {
+        display: inline-block;
+        margin-top: 10px;
+        color: #888;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Courier New', Courier, monospace;
+    }
+    
+    /* Ensure cards contrast well with the background */
+    .project-card {
+        transition: transform 0.3s ease;
+    }
+    
+    .project-card:hover {
+        transform: translateX(5px);
+    }
+	/* Typography Polish for Readability */
+	.project-description {
+		font-size: 1.05rem;
+		font-weight: 450; /* Stronger weight for dark mode */
+		line-height: 1.6;
+		color: var(--text-color);
+		opacity: 0.9;
+	}
+
+	/* Future Projects styling */
+	.future-card {
+		margin-top: 40px;
+		border-left: 3px dashed var(--ubc-gold) !important;
+		opacity: 0.7;
+	}
+
+	/* View More Button Styling */
+	#view-more-btn {
+		background: transparent;
+		border: 2px solid var(--ubc-gold);
+		color: var(--ubc-gold);
+		padding: 10px 25px;
+		border-radius: 8px;
+		cursor: pointer;
+		font-weight: bold;
+		transition: 0.3s;
+	}
+
+	#view-more-btn:hover {
+		background: var(--ubc-gold);
+		color: var(--ubc-blue);
+	}
+</style>
+</head>
+<body>
+   <button id="menu-toggle">
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+	</button>
+	<button id="theme-toggle">Switch Theme</button>
+
+    <nav id="sidebar">
+        <ul>
+            <li><a href="#about">About Me</a></li>
+			<li><a href="#education">Education</a></li>
+			<li><a href="#skills">Skills</a></li>
+			<li><a href="#journey">Learning Journey</a></li>
+			<li><a href="#notable-projects">Notable Projects</a></li>
+			<li><a href="#simulations">Interactive Simulations</a></li>
+        </ul>
+    </nav>
+
+<div id="overlay" onclick="toggleMenu()"></div>
+    <header>
+        <img src="pictures/profile.jpeg" alt="Deniz Dalbasi" class="profile-img">
+        <h1>Deniz Dalbasi</h1>
+        <p>I design systems at the intersection of code and hardware</p>
+        <div class="contact-links">
+            <a href="https://linkedin.com/in/deniz-dalbasi" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://github.com/denizdalbasi" target="_blank" rel="noopener noreferrer">GitHub</a>
+			<a href="https://docs.google.com/document/d/1-toyd7l7UeqwJWeR3qjYEzFjvhQ4fMEVLppKjhc89Ew/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Resume</a>
+        </div>
+    </header>
+
+    <div class="container">
+		<section id="about">
+			<div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
+				<div style="flex: 1; min-width: 300px;">
+					<h2>About Me</h2>
+					<p>
+					  Intended Computer Engineering student at UBC with a passion for the intersection 
+					  of embedded systems and AI. I'm working my way down the stack — from high-level automation and ML models to computer architecture and 
+					  embedded C. Currently focused on systems that bridge software logic and physical hardware.
+					</p>
+					<div class="contact-links" style="margin-top: 16px; margin-bottom: 0;">
+						<a href="#notable-projects" style="padding: 7px 16px; font-size: 0.85rem;">See my projects ↓</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		
+		
+
+        <section id="education">
+			<div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
+				<div style="flex: 1; min-width: 300px;">
+					<h2>Education</h2>
+					<h3>University of British Columbia</h3>
+					<p><strong>PROGRAM:</strong> Bachelor of Applied Science (BASc)</p>
+					<p><strong>INTENDED MAJOR:</strong> Computer Engineering</p>
+					
+				</div>
+
+				<div style="text-align: right; min-width: 150px; font-family: 'Courier New', Courier, monospace;">
+					<div style="color: #777; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+						2025 — PRESENT
+					</div>
+					<div style="color: #777; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+						Vancouver, BC
+					</div>
+				</div>
+			</div>
+		</section>
+
+        <section id="skills">
+            <h2>Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h4>Technical Knowledge</h4>
+					<ul class="tags">
+						<li data-tooltip="Data Science, Automation">Python</li> 
+						<li data-tooltip="Systems Programming & APSC 160">C</li> 
+						<li data-tooltip="Object-Oriented Programming">Java</li> 
+						<li data-tooltip="Database Management">SQL</li> 
+						<li data-tooltip="Statistical Models & DSCI 100">R</li> 
+						<li data-tooltip="Hardware Interfacing & Robotics">C++</li> 
+						<li data-tooltip="CPSC 110">Racket</li>
+					</ul>
+                </div>
+                <div class="skill-category">
+                    <h4>Engineering Tools</h4>
+                    <ul class="tags">
+                        <li data-tooltip="Hardware interpretation">Arduino</li> 
+                        <li data-tooltip="3D Modeling">SolidWorks</li> 
+                        <li data-tooltip="Numerical computing">MATLAB</li> 
+                        <li data-tooltip="Version control & Collaboration">Git</li> 
+                        <li data-tooltip="Machine Learning frameworks">TensorFlow</li> 
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h4>Communication</h4>
+                    <ul class="tags">
+                        <li data-tooltip="Native">Turkish</li>
+                        <li data-tooltip="Native">Russian</li>
+                        <li data-tooltip="Fluent">English</li>
+                        <li data-tooltip="Intermediate">German</li>
+                        <li data-tooltip="Elementary Level">French</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+		<section id="journey">
+			<h2>Learning Journey</h2>
+			<div class="timeline">
+				<div class="timeline-item">
+					<div class="timeline-date">JAN 2023</div>
+					<div class="timeline-content">
+						<h4>Initial Programing</h4>
+						<p>Started programming with <strong>Java</strong>. Learned OOP and basic logic.</p>
+					</div>
+				</div>
+
+				<div class="timeline-item">
+					<div class="timeline-date">DEC 2024</div>
+					<div class="timeline-content">
+						<h4>Automation Language</h4>
+						<p>Learnt and created projects with <strong>Python</strong>. Worked on automation and <strong>APIs</strong> and basic <strong>AI model</strong> integration.</p>
+					</div>
+				</div>
+
+				<div class="timeline-item">
+					<div class="timeline-date">APR 2026</div>
+					<div class="timeline-content">
+						<h4>Deep Systems Study</h4>
+						<p>Started <strong>Nand2Tetris</strong>. Learning computer architecture and building a simple computer.</p>
+					</div>
+				</div>
+
+				<div class="timeline-item">
+					<div class="timeline-date">MAY 2026+</div>
+					<div class="timeline-content">
+						<h4>Next Step</h4>
+						<p>Moving into <strong>Embedded AI Systems</strong>. Working on AI for small devices.</p>
+					</div>
+				</div>
+			</div>
+			</section>
+		<section id="notable-projects">
+			<h2>Notable Projects</h2>
+			<div class="project-list">
+				<div class="project-card">
+					<div style="display: flex; align-items: center; margin-bottom: 10px;">
+						<h3 style="margin: 0;">
+							<a href="https://github.com/denizdalbasi/nand2tetris" target="_blank" rel="noopener noreferrer">Nand2Tetris</a>
+						</h3>
+					</div>
+					<p class="project-description">Implementing a 16-bit computer system from first principles. Developed hardware logic using HDL, progressing from basic NAND gates to a fully functional CPU architecture.</p>
+					<span class="project-tech">HDL | Computer Architecture | Systems Programming</span>
+				</div>
+
+				<!-- HIDDEN PROJECTS -->
+				<div style="text-align: center; margin-top: 20px;">
+					<button id="projects-btn" onclick="toggleProjects()" style="background: none; border: 2px solid var(--ubc-gold); color: var(--accent-color); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+						+ View More Projects
+					</button>
+				</div>
+
+				<div id="more-projects" style="display: none; border-top: 2px dashed var(--ubc-gold); border-bottom: 2px dashed var(--ubc-gold); margin-top: 40px; margin-bottom: 40px; padding-top: 20px; padding-bottom: 20px;">
+					<div class="project-card">
+						<h3><a href="projects/mechanical-claw.html">MECHANICAL_CLAW</a></h3>
+						<p class="project-description">Servo-controlled mechanical claw built with Arduino and SolidWorks</p>
+						<span class="project-tech">Arduino | C++ | SolidWorks</span>
+					</div>
+					
+					<div class="project-card">
+						<h3><a href="projects/minecraft-predictor.html">GAME_PREDICTOR</a></h3>
+						<p class="project-description">Predictive model in R to classify Minecraft player behaviour from session data.</p>
+						<span class="project-tech">R | Predictive Modeling</span>
+					</div>
+
+					<div class="project-card">
+						<h3><a href="projects/autonomous-agent.html">STUDENT_BOT</a></h3>
+						<p class="project-description">Real-time Telegram bot for automated student record management.</p>
+						<span class="project-tech">Python | Telegram API</span>
+					</div>
+
+					<div class="project-card">
+						<h3><a href="projects/denigor-ascend.html">Denigor Ascend</a></h3>
+						<p class="project-description">Physics-based interactive vertical platformer game with OOP architecture.</p>
+						<span class="project-tech">Java | OOP</span>
+					</div>
+				</div>
+
+				
+
+				<!-- FUTURE PROJECTS (Kept at the very bottom as a roadmap) -->
+				<div class="project-card future-card">
+					<h3 style="margin: 0; font-style: italic;">Future Projects</h3>
+					<p class="project-description">Working on new side projects, especially in embedded AI and making systems more efficient.</p>
+					<span class="project-tech">In Progress</span>
+				</div>
+			</div>
+		</section>
+            
+        <section id="simulations" style="margin-top: 40px;">
+			<h2>Interactive Simulations</h2>
+			
+			<div class="project-card">
+				<h3><a href="projects/pathfinder.html" target="_blank">ROUTE_FINDER</a></h3>
+				<p>A real-time implementation of <strong>Dijkstra’s Algorithm</strong> for grid-based navigation.</p>
+				<ul class="tags">
+					<li data-tooltip="Mapping">Navigation/Pathfinder</li>
+					<li>Efficiency Analysis</li>
+				</ul>
+			</div>
+			<div class="project-card">
+				<h3><a href="projects/police_chaser.html" target="_blank">POLICE_CHASE</a></h3>
+				<p>An interactive high-speed chase simulation using <strong>Vector Fields</strong> and physics.</p>
+				<ul class="tags">
+					<li data-tooltip="Real-time Collision Avoidance">Collision Logic</li>
+					<li data-tooltip="Dynamic Array Management">Performance Optimization</li>
+				</ul>
+			</div>
+
+			<div class="project-card">
+				<h3><a href="projects/Visualizer.html" target="_blank">SORT_ALGORITHMS</a></h3>
+				<p>A visualization of different sorting algorithms.</p>
+				<ul class="tags">
+					<li data-tooltip="Recursive Data Splitting"> Sort Algorithms</li>
+				</ul>
+			</div>
+
+			<div style="text-align: center; margin: 20px 0;">
+				<button id="simulations-btn" onclick="toggleSimulations()" style="background: none; border: 2px solid var(--ubc-gold); color: var(--accent-color); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+					+ View More Simulations
+				</button>
+			</div>
+
+			<div id="simulation-archive" style="display: none; border-top: 1px solid #eee; padding-top: 20px;">
+				<div class="project-card">
+					<h3><a href="projects/ship.html" target="_blank">AERO_SIM-TERMINAL_DESC</a></h3>
+					<p>A mathematical game model of atmospheric descent using <strong>mechanical and computational laws.</strong></p>
+					<ul class="tags">
+						<li data-tooltip="Gravity & Thrust Modeling">Physics</li>
+					</ul>
+				</div>
+
+				<div class="project-card">
+					<h3><a href="projects/block.html" target="_blank">BREAK_SHELL</a></h3>
+					<p>A 2D physics simulation modeling <strong> collisions</strong> and momentum conservation.</p>
+					<ul class="tags">
+						<li data-tooltip="Collision Logic">Collision Detection</li>
+						<li data-tooltip="State-based Updates">Object Architecture</li>
+					</ul>
+				</div>
+				
+			</div>
+		</section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Deniz Dalbasi • Built with Engineering Heart</p>
+    </footer>
+
+    <script>
+        // --- 1. THEME TOGGLE SCRIPT ---
+        const themeBtn = document.getElementById("theme-toggle");
+        const body = document.body;
+
+        if (localStorage.getItem("portfolio-theme") === "dark") {
+            body.classList.add("dark-theme");
+            themeBtn.textContent = "Light Mode";
+        }
+
+        themeBtn.addEventListener("click", () => {
+            body.classList.toggle("dark-theme");
+            if (body.classList.contains("dark-theme")) {
+                localStorage.setItem("portfolio-theme", "dark");
+                themeBtn.textContent = "Light Mode";
+            } else {
+                localStorage.setItem("portfolio-theme", "light");
+                themeBtn.textContent = "Dark Mode";
+            }
+        });
+		const observerOptions = {
+			threshold: 0.15 
+		};
+
+		const revealObserver = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('reveal');
+				} else {
+					entry.target.classList.remove('reveal');
+				}
+			});
+		}, observerOptions);
+
+		document.querySelectorAll('section').forEach(section => {
+			revealObserver.observe(section);
+		});
+		function toggleMenu() {
+			const sidebar = document.getElementById('sidebar');
+			const overlay = document.getElementById('overlay');
+			sidebar.classList.toggle('active');
+			overlay.classList.toggle('active');
+		}
+
+		document.getElementById('menu-toggle').addEventListener('click', toggleMenu);
+
+		document.querySelectorAll('#sidebar a').forEach(anchor => {
+			anchor.addEventListener('click', function(e) {
+				e.preventDefault();
+				const targetId = this.getAttribute('href');
+				document.querySelector(targetId).scrollIntoView({
+					behavior: 'smooth'
+				});
+			});
+		});
+		const archive = document.getElementById("simulation-archive");
+
+		
+		// Logic for the Projects section
+		function toggleProjects() {
+			var moreProjects = document.getElementById("more-projects");
+			var btn = document.getElementById("projects-btn");
+
+			if (moreProjects.style.display === "none" || moreProjects.style.display === "") {
+				moreProjects.style.display = "block";
+				btn.innerHTML = "- Show Less";
+			} else {
+				moreProjects.style.display = "none";
+				btn.innerHTML = "+ View More Projects";
+			}
+		}
+
+		// Logic for the Simulations section
+		function toggleSimulations() {
+			var archive = document.getElementById("simulation-archive");
+			var btn = document.getElementById("simulations-btn");
+
+			if (archive.style.display === "none" || archive.style.display === "") {
+				archive.style.display = "block";
+				btn.innerHTML = "- Show Fewer";
+			} else {
+				archive.style.display = "none";
+				btn.innerHTML = "+ View More Simulations";
+			}
+		}
+    </script>
+</body>
+</html>
