@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en)
 <head>
     <meta charset="UTF-8">
     <title>Engineering Console: Sort-O-Matic v1.0</title>
@@ -13,6 +13,7 @@
             --sorted-color: #4caf50;
             --text-gray: #888;
             --border: #333;
+            --glow: rgba(255, 183, 3, 0.2);
         }
 
         body { 
@@ -23,79 +24,153 @@
             margin: 0;
         }
         
+        /* --- 3-Column Layout Setup --- */
         .main-wrapper {
             display: grid;
-            grid-template-columns: 1fr 300px; 
+            grid-template-columns: 240px 1fr 280px; 
             gap: 20px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         #control-panel {
-            grid-column: 1 / span 2;
+            grid-column: 1 / span 3; 
             border: 1px solid var(--accent);
-            padding: 15px; margin-bottom: 20px;
-            display: flex; gap: 15px; align-items: center;
+            padding: 15px; 
+            display: flex; 
+            gap: 15px; 
+            align-items: center;
             background: rgba(255, 183, 3, 0.05);
+            box-shadow: 0 0 10px var(--glow);
         }
 
+        /* --- Column 2: Simulation Visualizer (Middle) --- */
         .bar-container {
             display: flex;
             align-items: flex-end;
-            height: 400px;
+            height: 480px;
             gap: 2px;
             border: 1px solid var(--border);
             border-bottom: 2px solid var(--accent);
             padding: 10px;
-             background: var(--bg-color); 
+            background: var(--panel-dark); 
         }
 
         .bar {
             background-color: var(--bar-color);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.05);
             flex: 1;
-            transition: background-color 0.1s ease;
+            transition: background-color 0.05s ease;
         }
 
-        .sidebar {
+        .panel-box {
             background: var(--panel-dark);
             border: 1px solid var(--border);
             padding: 20px;
             font-size: 0.85rem;
+            height: 440px; /* Locked explicit internal heights to balance layout columns */
+            overflow: hidden;
         }
 
-        .sidebar h3 { 
+        .panel-box.scrollable {
+            overflow-y: auto;
+        }
+
+        /* Custom subtle scrollbar styling for the dark layout */
+        .panel-box.scrollable::-webkit-scrollbar {
+            width: 6px;
+        }
+        .panel-box.scrollable::-webkit-scrollbar-track {
+            background: var(--panel-dark);
+        }
+        .panel-box.scrollable::-webkit-scrollbar-thumb {
+            background: #222;
+            border-radius: 3px;
+        }
+        .panel-box.scrollable::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        .panel-box h3 { 
             color: var(--accent); 
             margin-top: 0; 
-            font-size: 1rem; 
+            font-size: 0.95rem; 
             text-transform: uppercase;
             border-bottom: 1px solid var(--border);
             padding-bottom: 10px;
+            letter-spacing: 1px;
+            position: sticky;
+            top: 0;
+            background: var(--panel-dark);
+            z-index: 10;
         }
 
-        .sidebar ul { padding-left: 15px; color: var(--text-gray); }
-        .sidebar li { margin-bottom: 12px; line-height: 1.4; }
+        .algo-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .algo-btn {
+            background: #0d1b2a;
+            border: 1px solid #1b4332;
+            color: #74c69d;
+            text-align: left;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .algo-btn:hover {
+            background: rgba(116, 198, 157, 0.1);
+            border-color: #4caf50;
+            color: #fff;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+        }
+
+        .algo-btn.active {
+            background: rgba(255, 183, 3, 0.1);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-weight: bold;
+            box-shadow: 0 0 12px var(--glow);
+        }
+
+        .algo-btn.active::before {
+            content: '>';
+            position: absolute;
+            right: 10px;
+            color: var(--accent);
+        }
+
+        /* --- Column 3: User Rules & Manual (Right) --- */
+        .panel-box ul { padding-left: 15px; color: var(--text-gray); margin-top: 10px; }
+        .panel-box li { margin-bottom: 12px; line-height: 1.4; }
         .highlight { color: var(--accent); }
 
-        button, select, input {
-			background: var(--panel-dark); /* Changed from none to dark */
-			border: 1px solid var(--accent);
-			color: var(--accent); 
-			padding: 8px; 
-			cursor: pointer;
-			outline: none;
-		}
+        button.console-btn, input {
+            background: var(--panel-dark);
+            border: 1px solid var(--accent);
+            color: var(--accent); 
+            padding: 8px 15px; 
+            cursor: pointer;
+            outline: none;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
 
-		/* This ensures the popup menu is also dark */
-		select option {
-			background: var(--bg-color);
-			color: var(--accent);
-		}
-
-        button:hover { background: var(--accent); color: black; }
+        button.console-btn:hover { 
+            background: var(--accent); 
+            color: black; 
+            box-shadow: 0 0 10px var(--glow);
+        }
 
         .stats { 
-            grid-column: 1 / span 2;
+            grid-column: 1 / span 3; 
             margin-top: 15px; 
             font-size: 0.8rem; 
             color: #888; 
@@ -108,41 +183,57 @@
 
     <div class="main-wrapper">
         <div id="control-panel">
-            <button onclick="generateArray()">[ NEW DATA ]</button>
-            <select id="algo-select">
-                <option value="bubble">Bubble Sort</option>
-                <option value="insertion">Insertion Sort</option>
-                <option value="quick">Quick Sort</option>
-                <option value="merge">Merge Sort</option>
-				<option value="selection">Selection Sort</option>
-				<option value="cocktail">Cocktail Shaker Sort</option>
-				<option value="heap">Heap Sort</option>
-            </select>
-            <button id="start-btn" onclick="startSort()">> EXECUTE</button>
-            <button id="stop-btn" onclick="stopSort()" style="color: #ff3c3c; border-color: #ff3c3c;">X STOP</button>
-            <span>Speed:</span>
-            <input type="range" id="speed" min="1" max="100" value="50">
+            <button class="console-btn" onclick="generateArray()">[ NEW DATA ]</button>
+            <button id="start-btn" class="console-btn" onclick="startSort()">> EXECUTE</button>
+            <button id="stop-btn" class="console-btn" onclick="stopSort()" style="color: #ff3c3c; border-color: #ff3c3c;">X STOP</button>
+            <span style="margin-left: auto;">Speed:</span>
+            <input type="range" id="speed" min="1" max="100" value="85">
         </div>
 
+        <!-- COLUMN 1: Engine Module Hub -->
+        <div class="left-column">
+            <div class="panel-box scrollable">
+                <h3>Algorithms</h3>
+                <div class="algo-grid">
+                    <button class="algo-btn active" onclick="selectAlgorithm('bubble', this)">01. BUBBLE_SORT</button>
+                    <button class="algo-btn" onclick="selectAlgorithm('insertion', this)">02. INSERTION_SORT</button>
+                    <button class="algo-btn" onclick="selectAlgorithm('selection', this)">03. SELECTION_SORT</button>
+                    <button class="algo-btn" onclick="selectAlgorithm('cocktail', this)">04. COCKTAIL_SHAKER</button>
+                    <button class="algo-btn" onclick="selectAlgorithm('heap', this)">05. HEAP_SORT</button>
+                    <button class="algo-btn" onclick="selectAlgorithm('quick', this)">06. QUICK_SORT</button>
+                    <button class="algo-btn" onclick="selectAlgorithm('merge', this)">07. MERGE_SORT</button>
+                    <button class="algo-btn" onclick="selectAlgorithm('shell', this)">08. SHELL_SORT</button>
+                    <button class="algo-btn" onclick="selectAlgorithm('gnome', this)">09. GNOME_SORT</button>
+                    <button class="algo-btn" onclick="selectAlgorithm('radix', this)">10. RADIX_SORT</button>
+                    <button class="algo-btn" onclick="selectAlgorithm('bogo', this)">11. BOGO_SORT</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMN 2: Simulation Visualizer Box -->
         <div class="bar-container" id="container"></div>
 
-        <div class="sidebar">
-			<h3>User Guide</h3>
-			<ul>
-				<li><strong>Generate:</strong> Use <span class="highlight">[ NEW DATA ]</span> to scramble the bars.</li>
-				<li><strong>Pick a Method:</strong> Choose an algorithm from the dropdown.</li>
-				<li><strong>Simulation:</strong> Click <span class="highlight">EXECUTE</span>. <span style="color:var(--compare-color)">Red</span> bars are active.</li>
-				<li><strong>Control Speed:</strong> Adjust the slider in real-time.</li>
-				<li><strong>Success:</strong> Bars turn <span style="color:var(--sorted-color)">Green</span> when organized.</li>
-			</ul>
-		</div>
+        <!-- COLUMN 3: User Guide Panel -->
+        <div class="right-column">
+            <div class="panel-box scrollable">
+                <h3>User Guide</h3>
+                <ul>
+                    <li><strong>Generate:</strong> Use <span style="color: var(--accent);">[ NEW DATA ]</span> to scramble the bars</li>
+                    <li><strong>Pick a Method:</strong> Choose an algorithm</li>
+                    <li><strong>Simulation:</strong> Click<span class="highlight"> EXECUTE</span> <span style="color: var(--compare-color); font-weight: bold; text-shadow: 0 0 5px rgba(255, 60, 60, 0.4);">Red</span> bars are active</li>
+                    <li><strong>Control Speed:</strong> Adjust the slider in real-time.</li>
+                    <li><strong>Success:</strong> Bars turn  <span style="color:var(--sorted-color)">Green</span>  when organized.</li>
+                </ul>
+            </div>
+        </div>
 
+        <!-- Footer Stats Status Ribbon -->
         <div class="stats">
-			[SYS] STATE: <span id="state-ui" class="highlight">IDLE</span> | 
-			ALGO: <span id="current-algo">NONE</span> | 
-			COMPARISONS: <span id="comp-count">0</span> | 
-			SWAPS: <span id="swap-count">0</span>
-		</div>
+            [SYS] STATE: <span id="state-ui" class="highlight">IDLE</span> | 
+            ARMED_MODULE: <span id="current-algo">BUBBLE</span> | 
+            COMPARISONS: <span id="comp-count">0</span> | 
+            SWAPS: <span id="swap-count">0</span>
+        </div>
     </div>
 
     <script>
@@ -151,10 +242,32 @@
         let swaps = 0;
         let isRunning = false;
         let stopRequested = false;
+        let selectedAlgorithm = 'bubble';
         const container = document.getElementById('container');
 
-        // --- Initialization ---
-        function generateArray(size = 40) {
+        function selectAlgorithm(algoName, element) {
+            if (isRunning) return;
+            selectedAlgorithm = algoName;
+            document.querySelectorAll('.algo-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById('current-algo').innerText = algoName.toUpperCase();
+        }
+
+        const AlgorithmRegistry = {
+            bubble: async () => await bubbleSort(),
+            insertion: async () => await insertionSort(),
+            selection: async () => await selectionSort(),
+            cocktail: async () => await cocktailSort(),
+            heap: async () => await heapSort(),
+            quick: async () => await quickSort(0, array.length - 1),
+            merge: async () => await mergeSort(0, array.length - 1),
+            shell: async () => await shellSort(),
+            gnome: async () => await gnomeSort(),
+            radix: async () => await radixSort(),
+            bogo: async () => await bogoSort()
+        };
+
+        function generateArray(size = 65) {
             array = [];
             container.innerHTML = '';
             comparisons = 0;
@@ -166,7 +279,7 @@
             updateStats();
 
             for (let i = 0; i < size; i++) {
-                const val = Math.floor(Math.random() * 350) + 10;
+                const val = Math.floor(Math.random() * 430) + 10;
                 array.push(val);
                 const bar = document.createElement('div');
                 bar.style.height = `${val}px`;
@@ -181,19 +294,19 @@
             document.getElementById('swap-count').innerText = swaps;
         }
 
-        function updateBar(k) {
+        function updateBar(k, color = null) {
             const bar = document.getElementById(`bar-${k}`);
-            if (bar) bar.style.height = `${array[k]}px`;
+            if (bar) {
+                bar.style.height = `${array[k]}px`;
+                if (color) bar.style.backgroundColor = color;
+            }
         }
 
-        // --- Utilities ---
         function sleep() {
             return new Promise((resolve, reject) => {
                 const ms = 101 - document.getElementById('speed').value;
                 setTimeout(() => {
-                    if (stopRequested) {
-                        reject(new Error("User Abort"));
-                    }
+                    if (stopRequested) reject(new Error("User Abort"));
                     resolve();
                 }, ms);
             });
@@ -221,16 +334,12 @@
             updateStats();
         }
 
-        // --- Algorithms ---
-
+        // --- Core Sort Implementations ---
         async function bubbleSort() {
             for (let i = 0; i < array.length; i++) {
                 for (let j = 0; j < array.length - i - 1; j++) {
-                    comparisons++;
-                    updateStats();
-                    if (array[j] > array[j+1]) {
-                        await swap(j, j+1);
-                    }
+                    comparisons++; updateStats();
+                    if (array[j] > array[j+1]) await swap(j, j+1);
                 }
             }
         }
@@ -240,13 +349,58 @@
                 let key = array[i];
                 let j = i - 1;
                 while (j >= 0 && array[j] > key) {
-                    comparisons++;
-                    updateStats();
+                    comparisons++; updateStats();
                     await swap(j + 1, j);
                     j = j - 1;
                 }
                 array[j + 1] = key;
             }
+        }
+
+        async function selectionSort() {
+            for (let i = 0; i < array.length; i++) {
+                let minIdx = i;
+                for (let j = i + 1; j < array.length; j++) {
+                    comparisons++; updateStats();
+                    const barJ = document.getElementById(`bar-${j}`);
+                    barJ.style.backgroundColor = 'var(--compare-color)';
+                    await sleep();
+                    barJ.style.backgroundColor = 'var(--bar-color)';
+                    if (array[j] < array[minIdx]) minIdx = j;
+                }
+                if (minIdx !== i) await swap(i, minIdx);
+            }
+        }
+
+        async function cocktailSort() {
+            let swapped = true; let start = 0; let end = array.length - 1;
+            while (swapped) {
+                swapped = false;
+                for (let i = start; i < end; i++) {
+                    comparisons++;
+                    if (array[i] > array[i + 1]) { await swap(i, i + 1); swapped = true; }
+                }
+                if (!swapped) break;
+                swapped = false; end--;
+                for (let i = end - 1; i >= start; i--) {
+                    comparisons++;
+                    if (array[i] > array[i + 1]) { await swap(i, i + 1); swapped = true; }
+                }
+                start++;
+            }
+        }
+
+        async function heapSort() {
+            let n = array.length;
+            for (let i = Math.floor(n / 2) - 1; i >= 0; i--) await heapify(n, i);
+            for (let i = n - 1; i > 0; i--) { await swap(0, i); await heapify(i, 0); }
+        }
+
+        async function heapify(n, i) {
+            let largest = i; let l = 2 * i + 1; let r = 2 * i + 2;
+            if (l < n) { comparisons++; if (array[l] > array[largest]) largest = l; }
+            if (r < n) { comparisons++; if (array[r] > array[largest]) largest = r; }
+            if (largest != i) { await swap(i, largest); await heapify(n, largest); }
         }
 
         async function quickSort(start, end) {
@@ -257,17 +411,12 @@
         }
 
         async function partition(start, end) {
-            let pivotIndex = start;
-            let pivotValue = array[end];
+            let pivotIndex = start; let pivotValue = array[end];
             for (let i = start; i < end; i++) {
                 comparisons++;
-                if (array[i] < pivotValue) {
-                    await swap(i, pivotIndex);
-                    pivotIndex++;
-                }
+                if (array[i] < pivotValue) { await swap(i, pivotIndex); pivotIndex++; }
             }
-            await swap(pivotIndex, end);
-            return pivotIndex;
+            await swap(pivotIndex, end); return pivotIndex;
         }
 
         async function mergeSort(l, r) {
@@ -279,154 +428,140 @@
         }
 
         async function merge(l, m, r) {
-            let n1 = m - l + 1;
-            let n2 = r - m;
-            let L = array.slice(l, m + 1);
-            let R = array.slice(m + 1, r + 1);
-
+            let n1 = m - l + 1; let n2 = r - m;
+            let L = array.slice(l, m + 1); let R = array.slice(m + 1, r + 1);
             let i = 0, j = 0, k = l;
             while (i < n1 && j < n2) {
-                comparisons++;
-                updateStats();
-                if (L[i] <= R[j]) {
-                    array[k] = L[i];
-                    i++;
-                } else {
-                    array[k] = R[j];
-                    j++;
-                }
-                updateBar(k);
-                await sleep();
-                k++;
+                comparisons++; updateStats();
+                if (L[i] <= R[j]) { array[k] = L[i]; i++; } 
+                else { array[k] = R[j]; j++; }
+                updateBar(k); await sleep(); k++;
             }
             while (i < n1) { array[k] = L[i]; updateBar(k); i++; k++; await sleep(); }
             while (j < n2) { array[k] = R[j]; updateBar(k); j++; k++; await sleep(); }
         }
 
-        // --- Execution Control ---
+        // --- Newly Integrated Module Methods ---
+
+        async function shellSort() {
+            let n = array.length;
+            for (let gap = Math.floor(n / 2); gap > 0; Math.floor(gap /= 2)) {
+                for (let i = gap; i < n; i++) {
+                    let temp = array[i];
+                    let j = i;
+                    while (j >= gap && array[j - gap] > temp) {
+                        comparisons++; updateStats();
+                        array[j] = array[j - gap];
+                        updateBar(j, 'var(--compare-color)');
+                        await sleep();
+                        updateBar(j, 'var(--bar-color)');
+                        j -= gap;
+                    }
+                    array[j] = temp;
+                    updateBar(j);
+                    swaps++; updateStats();
+                }
+            }
+        }
+
+        async function gnomeSort() {
+            let index = 0;
+            while (index < array.length) {
+                if (index == 0) index++;
+                comparisons++; updateStats();
+                if (array[index] >= array[index - 1]) {
+                    index++;
+                } else {
+                    await swap(index, index - 1);
+                    index--;
+                }
+            }
+        }
+
+        async function radixSort() {
+            let max = Math.max(...array);
+            for (let exp = 1; Math.floor(max / exp) > 0; exp *= 10) {
+                await radixCountingSort(exp);
+            }
+        }
+
+        async function radixCountingSort(exp) {
+            let output = new Array(array.length).fill(0);
+            let count = new Array(10).fill(0);
+
+            for (let i = 0; i < array.length; i++) {
+                let digit = Math.floor(array[i] / exp) % 10;
+                count[digit]++;
+                comparisons++; updateStats();
+            }
+
+            for (let i = 1; i < 10; i++) count[i] += count[i - 1];
+
+            for (let i = array.length - 1; i >= 0; i--) {
+                let digit = Math.floor(array[i] / exp) % 10;
+                output[count[digit] - 1] = array[i];
+                count[digit]--;
+            }
+
+            for (let i = 0; i < array.length; i++) {
+                array[i] = output[i];
+                swaps++; updateStats();
+                updateBar(i, 'var(--compare-color)');
+                await sleep();
+                updateBar(i, 'var(--bar-color)');
+            }
+        }
+
+        async function bogoSort() {
+            let maxThrottledShuffles = 50; // Safety cap to avoid hanging execution indefinitely
+            let loopCount = 0;
+            
+            while (!isSorted()) {
+                loopCount++;
+                if(loopCount > maxThrottledShuffles) {
+                    console.warn("Bogo algorithm emergency breaking to shield thread resources.");
+                    break;
+                }
+                for (let i = array.length - 1; i > 0; i--) {
+                    let j = Math.floor(Math.random() * (i + 1));
+                    await swap(i, j);
+                }
+            }
+        }
+
+        function isSorted() {
+            for (let i = 0; i < array.length - 1; i++) {
+                comparisons++; updateStats();
+                if (array[i] > array[i + 1]) return false;
+            }
+            return true;
+        }
+
+        // --- Core Execution Logic Engine ---
+
         async function startSort() {
             if (isRunning) return;
-            
-            const algo = document.getElementById('algo-select').value;
+            if (!AlgorithmRegistry[selectedAlgorithm]) return;
+
             document.getElementById('start-btn').disabled = true;
-            document.getElementById('current-algo').innerText = algo.toUpperCase();
             document.getElementById('state-ui').innerText = "RUNNING";
-            
             isRunning = true;
             stopRequested = false;
 
             try {
-                if (algo === 'bubble') await bubbleSort();
-			if (algo === 'insertion') await insertionSort();
-			if (algo === 'quick') await quickSort(0, array.length - 1);
-			if (algo === 'merge') await mergeSort(0, array.length - 1);
-			if (algo === 'selection') await selectionSort();
-			if (algo === 'cocktail') await cocktailSort();
-			if (algo === 'heap') await heapSort();
-                
+                await AlgorithmRegistry[selectedAlgorithm]();
                 document.getElementById('state-ui').innerText = "COMPLETE";
                 document.querySelectorAll('.bar').forEach(b => b.style.backgroundColor = 'var(--sorted-color)');
             } catch (e) {
                 document.getElementById('state-ui').innerText = "HALTED";
-                console.log("Sort stopped.");
             } finally {
                 isRunning = false;
                 document.getElementById('start-btn').disabled = false;
             }
         }
 
-        function stopSort() {
-            if (isRunning) {
-                stopRequested = true;
-            }
-        }
-		async function selectionSort() {
-			for (let i = 0; i < array.length; i++) {
-				let minIdx = i;
-				for (let j = i + 1; j < array.length; j++) {
-					comparisons++;
-					updateStats();
-					
-					// Highlight scanning
-					const barJ = document.getElementById(`bar-${j}`);
-					barJ.style.backgroundColor = 'var(--compare-color)';
-					await sleep();
-					barJ.style.backgroundColor = 'var(--bar-color)';
+        function stopSort() { if (isRunning) stopRequested = true; }
 
-					if (array[j] < array[minIdx]) {
-						minIdx = j;
-					}
-				}
-				if (minIdx !== i) {
-					await swap(i, minIdx);
-				}
-			}
-		}
-		async function cocktailSort() {
-			let swapped = true;
-			let start = 0;
-			let end = array.length - 1;
-
-			while (swapped) {
-				swapped = false;
-				// Forward pass
-				for (let i = start; i < end; i++) {
-					comparisons++;
-					if (array[i] > array[i + 1]) {
-						await swap(i, i + 1);
-						swapped = true;
-					}
-				}
-				if (!swapped) break;
-				swapped = false;
-				end--;
-
-				// Backward pass
-				for (let i = end - 1; i >= start; i--) {
-					comparisons++;
-					if (array[i] > array[i + 1]) {
-						await swap(i, i + 1);
-						swapped = true;
-					}
-				}
-				start++;
-			}
-		}
-		async function heapSort() {
-			let n = array.length;
-
-			for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
-				await heapify(n, i);
-			}
-
-			for (let i = n - 1; i > 0; i--) {
-				await swap(0, i);
-				await heapify(i, 0);
-			}
-		}
-
-		async function heapify(n, i) {
-			let largest = i;
-			let l = 2 * i + 1;
-			let r = 2 * i + 2;
-
-			if (l < n) {
-				comparisons++;
-				if (array[l] > array[largest]) largest = l;
-			}
-
-			if (r < n) {
-				comparisons++;
-				if (array[r] > array[largest]) largest = r;
-			}
-
-			if (largest != i) {
-				await swap(i, largest);
-				await heapify(n, largest);
-			}
-		}
-
-        // Boot the console
         generateArray();
     </script>
 </body>
