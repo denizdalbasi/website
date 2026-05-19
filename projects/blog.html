@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summer Dev Logs - Deniz Dalbasi</title>
+    
+    <style>
+    :root {
+        --ubc-blue: #002145;
+        --ubc-gold: #ffb703;
+        --bg-color: #f4f7f9;
+        --text-color: #333;
+        --section-bg: #ffffff;
+        --accent-color: var(--ubc-blue); 
+        --card-shadow: rgba(0,0,0,0.05);
+    }
+
+    body.dark-theme {
+        --bg-color: #0b141d;
+        --text-color: #e0e0e0;
+        --section-bg: #16222e;
+        --accent-color: var(--ubc-gold); 
+        --card-shadow: rgba(0,0,0,0.4);
+    }
+
+    body { 
+        font-family: 'Segoe UI', system-ui, sans-serif; 
+        line-height: 1.6; 
+        color: var(--text-color); 
+        max-width: 1000px; 
+        margin: 0 auto; 
+        padding: 0; 
+        background-color: var(--bg-color); 
+        transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    header { 
+        background: var(--ubc-blue);
+        color: white; 
+        padding: 40px 20px 60px 20px; 
+        text-align: center; 
+        border-bottom: 5px solid var(--ubc-gold);
+    }
+
+    .profile-img {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        border: 5px solid white;
+        object-fit: cover;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    header h1 { margin: 10px 0; font-size: 2.8rem; color: white; }
+    header p { font-size: 1.2rem; opacity: 0.9; margin: 5px 0; color: white; }
+
+    #theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1002;
+        background: var(--ubc-blue);
+        border: 1px solid var(--ubc-gold);
+        color: var(--ubc-gold);
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .container { 
+        padding: 40px 20px; 
+        perspective: 2000px;
+    }
+
+    section { 
+        background: var(--section-bg); 
+        padding: 30px; 
+        border-radius: 15px; 
+        box-shadow: 0 5px 20px var(--card-shadow); 
+        margin-bottom: 30px; 
+        opacity: 0;
+        transform: rotateX(-90deg) translateZ(-100px);
+        transform-origin: top;
+        backface-visibility: hidden;
+        transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                    opacity 0.8s ease, 
+                    background 0.3s ease;
+    }
+
+    section.reveal { 
+        opacity: 1;
+        transform: rotateX(0deg) translateZ(0);
+    }
+
+    h2 { 
+        color: var(--accent-color); 
+        border-left: 5px solid var(--ubc-gold);
+        padding-left: 15px;
+        margin-top: 0;
+        font-size: 1.8rem;
+        transition: color 0.3s;
+    }
+
+    .blog-card {
+        padding: 15px 0;
+    }
+    
+    .blog-card h3 {
+        margin-top: 0;
+        font-size: 1.4rem;
+        color: var(--accent-color);
+    }
+
+    .date {
+        font-family: 'Courier New', Courier, monospace;
+        color: #777;
+        font-size: 0.9rem;
+        margin-top: -10px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    body.dark-theme .date {
+        color: var(--ubc-gold);
+    }
+
+    .blog-card a {
+        color: var(--ubc-gold);
+        text-decoration: none;
+        font-weight: bold;
+    }
+    
+    body:not(.dark-theme) .blog-card a {
+        color: var(--ubc-blue);
+        text-decoration: underline;
+    }
+
+    .log-divider {
+        border: 0; 
+        border-top: 1px dashed var(--ubc-gold); 
+        margin: 30px 0;
+        opacity: 0.5;
+    }
+
+    footer { text-align: center; padding: 40px; color: #999; font-size: 0.9rem; }
+
+    @media (max-width: 600px) {
+        header h1 { font-size: 2rem; }
+        .profile-img { width: 140px; height: 140px; }
+    }
+</style>
+</head>
+<body>
+    <button id="theme-toggle">Switch Theme</button>
+
+    <header>
+        <div style="margin-bottom: 30px; text-align: center;">
+            <a href="../index.html" style="color: var(--ubc-gold); text-decoration: none; font-weight: bold; font-size: 1.1rem;">
+                ← Back to Portfolio
+            </a>
+        </div>
+
+        <img src="pictures/profile.jpeg" alt="Deniz Dalbasi" class="profile-img">
+        <h1>Deniz Dalbasi</h1>
+        <p>Summer Blog — Engineering & Systems Notebook</p>
+    </header>
+
+    <div class="container">
+        <section id="logs">
+            <h2>Weekly Engineering Logs</h2>
+
+            <hr class="log-divider">
+            
+            <!-- WEEK 1 START (BOTTOM / OLDEST) -->
+            <div class="blog-card">
+                <h3>Week 1: </h3>
+                <p class="date">May 20, 2026</p>
+                
+                <p><strong>What I Built/Learned:</strong> </p>
+                
+                <p><strong>Blockers Faced:</strong> </p>
+                
+                <p><strong>GitHub Commit:</strong> <a href="LINK_TO_YOUR_COMMIT" target="_blank">View my register configuration code ↗</a></p>
+            </div>
+            <!-- WEEK 1 END -->
+
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Deniz Dalbasi • Built with Engineering Heart</p>
+    </footer>
+
+    <script>
+        const themeBtn = document.getElementById("theme-toggle");
+        const body = document.body;
+
+        if (localStorage.getItem("portfolio-theme") === "dark") {
+            body.classList.add("dark-theme");
+            themeBtn.textContent = "Light Mode";
+        }
+
+        themeBtn.addEventListener("click", () => {
+            body.classList.toggle("dark-theme");
+            if (body.classList.contains("dark-theme")) {
+                localStorage.setItem("portfolio-theme", "dark");
+                themeBtn.textContent = "Light Mode";
+            } else {
+                localStorage.setItem("portfolio-theme", "light");
+                themeBtn.textContent = "Dark Mode";
+            }
+        });
+
+        // --- 3D REVEAL SCROLL ANIMATION ---
+        const observerOptions = { threshold: 0.05 };
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            revealObserver.observe(section);
+        });
+    </script>
+</body>
+</html>
