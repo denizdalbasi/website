@@ -105,16 +105,6 @@
         transition: color 0.3s;
     }
 
-    .blog-card {
-        padding: 15px 0;
-    }
-    
-    .blog-card h3 {
-        margin-top: 0;
-        font-size: 1.4rem;
-        color: var(--accent-color);
-    }
-
     .date {
         font-family: 'Courier New', Courier, monospace;
         color: #777;
@@ -129,16 +119,7 @@
         color: var(--ubc-gold);
     }
 
-    .blog-card a {
-        color: var(--ubc-gold);
-        text-decoration: none;
-        font-weight: bold;
-    }
     
-    body:not(.dark-theme) .blog-card a {
-        color: var(--ubc-blue);
-        text-decoration: underline;
-    }
 
     .log-divider {
         border: 0; 
@@ -152,6 +133,52 @@
     @media (max-width: 600px) {
         header h1 { font-size: 2rem; }
         .profile-img { width: 140px; height: 140px; }
+    }
+    .page-title {
+        color: var(--accent-color);
+        border-left: 5px solid var(--ubc-gold);
+        padding-left: 15px;
+        margin-bottom: 30px;
+        font-size: 2rem;
+        transition: color 0.3s;
+    }
+
+    .log-card { 
+        background: var(--section-bg); 
+        padding: 30px; 
+        border-radius: 15px; 
+        box-shadow: 0 5px 20px var(--card-shadow); 
+        margin-bottom: 35px; 
+        opacity: 0;
+        transform: rotateX(-30deg) translateZ(-50px); /* Clean, subtle entry angle */
+        transform-origin: top;
+        backface-visibility: hidden;
+        transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                    opacity 0.6s ease, 
+                    background 0.3s ease;
+    }
+
+    .log-card.reveal { 
+        opacity: 1;
+        transform: rotateX(0deg) translateZ(0);
+    }
+
+    .log-card h3 {
+        margin-top: 0;
+        font-size: 1.4rem;
+        color: var(--accent-color);
+        margin-bottom: 10px;
+    }
+
+    .log-card a {
+        color: var(--ubc-gold);
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    body:not(.dark-theme) .log-card a {
+        color: var(--ubc-blue);
+        text-decoration: underline;
     }
 </style>
 </head>
@@ -167,25 +194,38 @@
 
         <img src="../pictures/profile.jpeg" alt="Deniz Dalbasi" class="profile-img">
         <h1>Deniz Dalbasi</h1>
-        <p>Summer Blog || Engineering & Systems Notebook</p>
+        <p>Summer Blog || Systems Notebook</p>
     </header>
 
     <div class="container">
-        <section id="logs">
-            <h2>Weekly Engineering Logs</h2>
+        <h2 class="page-title">Weekly Engineering Logs</h2>
 
-            <hr class="log-divider">
+        
+        <section class="log-card">
+            <h3>Week 3: Bare-Metal GPIO Control & RCC Initialization</h3>
+            <p class="date">May 11, 2026</p>
             
-            <!-- WEEK 1 START -->
-            <div class="blog-card">
-                <h3>Week 1: Bare-Metal GPIO Control & RCC Initialization</h3>
-                <p class="date">May 11, 2026</p>
-                
-                <p><strong>What I Built/Learned:</strong> Built a bare-metal LED toggle on an STM32F407VG (Cortex-M4) using CMSIS. Manipulated memory-mapped registers via bit-masking to manually configure GPIO settings (`MODER`, `OTYPER`, `OSPEEDR`) and analyze instruction timing with a software delay loop.</p>
-                <p><strong>GitHub:</strong> <a href="https://github.com/denizdalbasi/STM32-Embedded-Development/tree/main/01-GPIO-Blink" target="_blank">View my code ↗</a></p>
-            </div>
-
+            <p><strong>What I Built/Learned:</strong> Built a bare-metal LED toggle on an STM32F407VG (Cortex-M4) using CMSIS. Manipulated memory-mapped registers via bit-masking to manually configure GPIO settings (`MODER`, `OTYPER`, `OSPEEDR`) and analyze instruction timing with a software delay loop.</p>
+            <p><strong>GitHub:</strong> <a href="https://github.com/denizdalbasi/STM32-Embedded-Development/tree/main/01-GPIO-Blink" target="_blank">View my code ↗</a></p>
         </section>
+
+        
+        <section class="log-card">
+            <h3>Week 2: Nand2Tetris – Machine Language & Assembler (Projects 4-6)</h3>
+            <p class="date">May 4, 2026</p>
+            
+            <p><strong>What I Built/Learned:</strong> Deepened low-level systems programming by writing a complete 2-pass Assembler from scratch in Python to translate Hack assembly code into binary machine code.</p>
+            <p><strong>GitHub:</strong> <a href="https://github.com/denizdalbasi/nand2tetris" target="_blank">View my code ↗</a></p>
+        </section>
+
+        <section class="log-card">
+            <h3>Week 1: Nand2Tetris – Logic Gates to Assembly (Projects 1-4)</h3>
+            <p class="date">April 27, 2026</p>
+            
+            <p><strong>What I Built/Learned:</strong> Built a 16-bit ALU and CPU architecture from scratch starting entirely from raw NAND gates using Hardware Description Language (HDL). Implemented low-level memory mapping for RAM/Screen/Keyboard.</p>
+            <p><strong>GitHub:</strong> <a href="https://github.com/denizdalbasi/nand2tetris" target="_blank">View my code ↗</a></p>
+        </section> 
+
     </div>
 
     <footer>
@@ -225,6 +265,7 @@
         document.querySelectorAll('section').forEach(section => {
             revealObserver.observe(section);
         });
+        
     </script>
 </body>
 </html>
