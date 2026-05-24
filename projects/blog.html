@@ -119,8 +119,6 @@
         color: var(--ubc-gold);
     }
 
-    
-
     .log-divider {
         border: 0; 
         border-top: 1px dashed var(--ubc-gold); 
@@ -188,7 +186,7 @@
     <header>
         <div style="margin-bottom: 30px; text-align: center;">
             <a href="../index.html" style="color: var(--ubc-gold); text-decoration: none; font-weight: bold; font-size: 1.1rem;">
-                ← Back to Portfolio
+                &larr; Back to Portfolio
             </a>
         </div>
 
@@ -198,24 +196,35 @@
     </header>
 
     <div class="container">
-        <h2 class="page-title">Weekly Engineering Logs</h2>
+        <h2 class="page-title">Weekly Logs</h2>
 
-        
+        <section class="log-card">
+            <h3>Week 4: LeetCode, Nand2Tetris Part 2, & Moving to STM32CubeIDE</h3>
+            <p class="date">May 18, 2026</p>
+            
+            <p><strong>What I Built/Learned:</strong> This week was about balancing algorithmic problem-solving with shifts in both my software and hardware development setups:</p>
+            <ul style="padding-left: 20px; margin: 10px 0;">
+                <li><strong>Data Structures & Algorithms:</strong> Kept the coding by committing LeetCode problems.</li>
+                <li><strong>Nand2Tetris:</strong> Wrapped up the hardware side of the course and crossed over into Part II. Moving away from logic gates to dive straight into building virtual machine layers.</li>
+                <li><strong>STM32 Embedded Development:</strong> Added a clean hardware-blinking mechanism. I also decided to do my projects from <strong>STM32CubeIDE</strong> and not from pycharm, the built-in visualizers and better debugging tools make it a lot easier to see exactly what's happening.</li>
+            </ul>
+            <p><strong>GitHub:</strong> <a href="https://github.com/denizdalbasi" target="_blank">View my updates &rsaquo;</a></p>
+        </section>
+
         <section class="log-card">
             <h3>Week 3: Bare-Metal GPIO Control & RCC Initialization</h3>
             <p class="date">May 11, 2026</p>
             
             <p><strong>What I Built/Learned:</strong> Built a bare-metal LED toggle on an STM32F407VG (Cortex-M4) using CMSIS. Manipulated memory-mapped registers via bit-masking to manually configure GPIO settings (`MODER`, `OTYPER`, `OSPEEDR`) and analyze instruction timing with a software delay loop.</p>
-            <p><strong>GitHub:</strong> <a href="https://github.com/denizdalbasi/STM32-Embedded-Development/tree/main/01-GPIO-Blink" target="_blank">View my code ↗</a></p>
+            <p><strong>GitHub:</strong> <a href="https://github.com/denizdalbasi/STM32-Embedded-Development/" target="_blank">View my code &rsaquo;</a></p>
         </section>
 
-        
         <section class="log-card">
             <h3>Week 2: Nand2Tetris – Machine Language & Assembler (Projects 4-6)</h3>
             <p class="date">May 4, 2026</p>
             
             <p><strong>What I Built/Learned:</strong> Deepened low-level systems programming by writing a complete 2-pass Assembler from scratch in Python to translate Hack assembly code into binary machine code.</p>
-            <p><strong>GitHub:</strong> <a href="https://github.com/denizdalbasi/nand2tetris" target="_blank">View my code ↗</a></p>
+            <p><strong>GitHub:</strong> <a href="https://github.com/denizdalbasi/nand2tetris" target="_blank">View my code &rsaquo;</a></p>
         </section>
 
         <section class="log-card">
@@ -223,13 +232,13 @@
             <p class="date">April 27, 2026</p>
             
             <p><strong>What I Built/Learned:</strong> Built a 16-bit ALU and CPU architecture from scratch starting entirely from raw NAND gates using Hardware Description Language (HDL). Implemented low-level memory mapping for RAM/Screen/Keyboard.</p>
-            <p><strong>GitHub:</strong> <a href="https://github.com/denizdalbasi/nand2tetris" target="_blank">View my code ↗</a></p>
+            <p><strong>GitHub:</strong> <a href="https://github.com/denizdalbasi/nand2tetris" target="_blank">View my code &rsaquo;</a></p>
         </section> 
 
     </div>
 
     <footer>
-        <p>&copy; 2026 Deniz Dalbasi • Built with Engineering Heart</p>
+        <p>&copy; 2026 Deniz Dalbasi &bull; Built with Engineering Heart</p>
     </footer>
 
     <script>
@@ -262,7 +271,7 @@
             });
         }, observerOptions);
 
-        document.querySelectorAll('section').forEach(section => {
+        document.querySelectorAll('.log-card').forEach(section => {
             revealObserver.observe(section);
         });
         
